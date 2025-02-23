@@ -76,7 +76,7 @@ public class Mavenproject4 {
 
 
 
-        //// profesor
+        //// Curso Profesor
 
         Profesor profesor1 = new Profesor("OPS", 1.0,"nestor", "suat", "suat@gmail.com");
         Profesor profesor2 = new Profesor("Nomina", 1.0,"Frankie", "Ruiz", "fruiz@gmail.com");
@@ -106,6 +106,31 @@ public class Mavenproject4 {
         System.out.println("\n/// Imprimir posicion cursos inscritos\n");
         listadoCursoProfesores.imprimirPosicion(0);
 
+        //Inscripción personas
+        Persona personaInscripcion1 = new Persona(1.0,"richard", "staldman", "richard@nose.com");
+        Persona personaInscripcion2 = new Persona(2.0,"doctor", "linux", "poo@nose.com");
 
+        List<Persona> listadoPersonas = new ArrayList<Persona>();
+        InscripcionesPersonas listadoInscripcionPersonas = new InscripcionesPersonas(listadoPersonas);
+
+        System.out.println("/// Carga de información inscritos desde arhcivo///\n");
+        listadoInscripcionPersonas.cargarDatos(ArchivoInformacionInscritos);
+
+        System.out.println("//Inscripcion de personas\n");
+        listadoInscripcionPersonas.inscribir(personaInscripcion1);
+        listadoInscripcionPersonas.inscribir(personaInscripcion2);
+        listadoInscripcionPersonas.guardarInformacion(ArchivoInformacionInscritos);
+        listadoInscripcionPersonas.cargarDatos(ArchivoInformacionInscritos);
+
+        System.out.println("/// Actualizar información inscritos///\n");
+        personaInscripcion1.setApellidos("Apellido Actualizado");
+        personaInscripcion2.setNombres("Nombre Actualizado");
+        listadoInscripcionPersonas.actualizar(decanoIngenieria);
+        listadoInscripcionPersonas.guardarInformacion(ArchivoInformacionInscritos);
+        listadoInscripcionPersonas.cargarDatos(ArchivoInformacionInscritos);
+
+        System.out.println("/// Eliminar información inscritos///\n");
+        listadoInscripcionPersonas.eliminar(personaInscripcion1);
+        listadoInscripcionPersonas.guardarInformacion(ArchivoInformacionInscritos);
     }
 }
