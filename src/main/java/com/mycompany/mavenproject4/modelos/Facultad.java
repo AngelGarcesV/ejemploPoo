@@ -4,11 +4,13 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Estudiante_MCA
  */
-public class Facultad {
+public class Facultad implements Serializable {
     private Double ID;
     private String nombre;
     private Persona decano;
@@ -46,6 +48,6 @@ public class Facultad {
     @Override
     public String toString(){
     
-        return "Id: "+ this.ID + "Nombre: "+ this.nombre+ "Decano: "+ this.decano;
+        return "Id: "+ this.ID + " Nombre: "+ this.nombre+ "D ecano: "+ this.decano + " ";
     }
 }

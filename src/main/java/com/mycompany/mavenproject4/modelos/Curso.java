@@ -4,11 +4,13 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Estudiante_MCA
  */
-public class Curso {
+public class Curso implements Serializable {
     private int ID;
     private Programa programa;
     private Boolean activo;
@@ -44,6 +46,6 @@ public class Curso {
     }
     @Override
     public String toString(){
-        return "Id: "+ this.ID + "Programa: "+ this.programa + "Activo :" +this.activo;
+        return "Id: "+ this.ID + " Programa: "+ this.programa + " Activo :" +this.activo + " ";
     }
 }

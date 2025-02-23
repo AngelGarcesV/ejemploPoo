@@ -4,12 +4,13 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Estudiante_MCA
  */
-public class Persona {
-    private static final long serialVersionUID = 1L;
+public class Persona implements Serializable {
     private Double ID;
     private String nombres;
     private String apellidos;
@@ -61,6 +62,6 @@ public class Persona {
     @Override
     public String toString(){
     
-        return "Id: "+ this.ID + ", Nombres: "+ this.nombres+ ", Apellidos: "+ this.apellidos + ", email: "+ this.email;
+        return "Id: "+ this.ID + ", Nombres: "+ this.nombres+ ", Apellidos: "+ this.apellidos + ", email: "+ this.email+"\n";
     }
 }

@@ -4,11 +4,13 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Estudiante_MCA
  */
-public class CursoProfesor {
+public class CursoProfesor implements Serializable {
     private Profesor profesor;
     private int año;
     private int semestre;

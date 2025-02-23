@@ -4,11 +4,13 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Estudiante_MCA
  */
-public class Inscripcion {
+public class Inscripcion implements Serializable {
     private Curso curso;
     private int año;
     private int semestre;
@@ -22,7 +24,7 @@ public class Inscripcion {
     }
     @Override
     public String toString(){
-        return "Curso: "+ this.curso + "Año: " + this.año + "semestre :" + this.semestre + "Estudiante :" + this.estudiante;
+        return "Curso: "+ this.curso + " Año: " + this.año + " semestre :" + this.semestre + " Estudiante :" + this.estudiante+ " ";
     }
 
     public Curso getCurso() {

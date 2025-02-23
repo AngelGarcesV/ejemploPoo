@@ -4,11 +4,13 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Estudiante_MCA
  */
-public class Profesor extends Persona{
+public class Profesor extends Persona implements Serializable {
     private String TipoContrato;
     
     public Profesor(String TipoContrato){

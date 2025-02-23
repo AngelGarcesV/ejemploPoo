@@ -4,11 +4,13 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Estudiante_MCA
  */
-public class Programa {
+public class Programa implements Serializable {
     private Double ID;
     private String nombre;
     private Double duracion;

@@ -4,11 +4,13 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Estudiante_MCA
  */
-public class Estudiante extends Persona{
+public class Estudiante extends Persona implements Serializable {
     private Double codigo;
     private Programa programa;
     private Boolean activo;
@@ -57,7 +59,7 @@ public class Estudiante extends Persona{
     @Override
     public String toString() {
         
-        return  "codigo: " + codigo + ", programa: " + programa + ", activo: " + activo + ", promedio: " + promedio + '}';
+        return  "codigo: " + codigo + ", programa: " + programa + ", activo: " + activo + ", promedio: " + promedio +" ";
     }
    
     
