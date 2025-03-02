@@ -28,12 +28,12 @@ public class Mavenproject4 {
         Facultad facultadIngenieria = new Facultad(1.0,"ingenieria", decanoIngenieria);
 
         Programa ingSistemas = new Programa(1.0, "sistemas", 40.0, facultadIngenieria, "presencial");
-        Curso poo = new Curso(1, ingSistemas, true);
+        Curso poo = new Curso(1L, ingSistemas, true);
         Estudiante estudiante1 = new Estudiante(12345.0,ingSistemas,true,4.5,1.0,"Juan","Pérez", "juanperez@email.com");
         Inscripcion Inscripcion1 = new Inscripcion(poo,2022, 3, estudiante1);
 
         Programa ingAmbiental = new Programa(2.0, "ambiental", 46.0, facultadIngenieria, "ambiental");
-        Curso integral = new Curso(2, ingSistemas, true);
+        Curso integral = new Curso(2L, ingSistemas, true);
         Estudiante estudiante2 = new Estudiante(161104812.0, ingAmbiental, true, 3.4, 2.0, "Santiago", "Cortes", "scortes@email.com");
         Inscripcion Inscripcion2 = new Inscripcion(integral, 2024, 2, estudiante2);
 

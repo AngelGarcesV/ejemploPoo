@@ -4,14 +4,21 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
 import java.io.Serializable;
 
 /**
  *
  * @author Estudiante_MCA
  */
+//@Entity
+//@Table(name = "Inscripcion")
 public class Inscripcion implements Serializable {
     private Curso curso;
+    @Column(name = "año")
     private int año;
     private int semestre;
     private Estudiante estudiante;

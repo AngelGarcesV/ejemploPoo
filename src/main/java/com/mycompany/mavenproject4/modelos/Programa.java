@@ -4,17 +4,27 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 
 /**
  *
  * @author Estudiante_MCA
  */
+@Entity
+@Table(name = "Programa")
 public class Programa implements Serializable {
+    @Id
     private Double ID;
+    @Column(name = "nombre")
     private String nombre;
+    @Column(name = "duracion")
     private Double duracion;
+    @ManyToOne
+    @JoinColumn(name = "facultad_id")
     private Facultad facultad;
+    @Column(name = "registro")
     private String registro;
     
     public Programa(Double ID, String nombre, Double duracion, Facultad facultad, String registro){
@@ -23,6 +33,10 @@ public class Programa implements Serializable {
         this.duracion = duracion;
         this.registro = registro;
         this.facultad = facultad;
+    }
+
+    public Programa() {
+
     }
 
     public Double getID() {

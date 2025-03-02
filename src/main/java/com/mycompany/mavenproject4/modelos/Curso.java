@@ -4,23 +4,28 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 
 /**
  *
  * @author Estudiante_MCA
  */
+@Entity
+@Table(name = "Curso")
 public class Curso implements Serializable {
-    private int ID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name="programa_id")
     private Programa programa;
+    @Column (name = "activo")
     private Boolean activo;
 
-    public int getID() {
-        return ID;
-    }
+    public Curso() {
 
-    public void setID(int ID) {
-        this.ID = ID;
     }
 
     public Programa getPrograma() {
@@ -39,13 +44,23 @@ public class Curso implements Serializable {
         this.activo = activo;
     }
     
-    public Curso(int ID, Programa programa, Boolean activo){
-        this.ID = ID;
+    public Curso(Long ID, Programa programa, Boolean activo){
+        this.id = ID;
         this.programa = programa;
         this.activo = activo;
     }
     @Override
     public String toString(){
-        return "Id: "+ this.ID + " Programa: "+ this.programa + " Activo :" +this.activo + " ";
+        return "Id: "+ this.id + " Programa: "+ this.programa + " Activo :" +this.activo + " ";
     }
+
+    public void setID(Long id) {
+        this.id = id;
+    }
+
+    public Long getID() {
+        return id;
+    }
+
+
 }

@@ -4,21 +4,33 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 
 /**
  *
  * @author Estudiante_MCA
  */
+@Entity
+@Table(name="Facultad")
 public class Facultad implements Serializable {
+    @Id
     private Double ID;
+    @Column(name="nombre")
     private String nombre;
+    @OneToOne
+    @JoinColumn(name = "decano")
     private Persona decano;
     
     public Facultad(Double ID, String nombre, Persona decano){
         this.ID = ID;
         this.nombre = nombre;
         this.decano = decano;
+    }
+
+    public Facultad() {
+
     }
 
     public Double getID() {

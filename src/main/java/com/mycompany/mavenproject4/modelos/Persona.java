@@ -4,16 +4,27 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.io.Serializable;
 
 /**
  *
  * @author Estudiante_MCA
  */
+@Entity
+@Table(name = "Persona")
 public class Persona implements Serializable {
+    @Id
     private Double ID;
+    @Column(name = "nombres")
     private String nombres;
+    @Column (name = "apellidos")
     private String apellidos;
+    @Column(name = "email")
     private String email;
 
     public Persona(Double ID, String nombres, String apellidos, String email) {
