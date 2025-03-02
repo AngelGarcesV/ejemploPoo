@@ -4,70 +4,88 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  *
  * @author Estudiante_MCA
  */
-public class InscripcionesPersonas {
+public class InscripcionesPersonas implements Serializable {
+
     private List<Persona> listadoInscripcionPersonas;
 
     public InscripcionesPersonas(List<Persona> listadoInscripcionPersonas) {
         this.listadoInscripcionPersonas = listadoInscripcionPersonas;
     }
-    
-    
-    public void inscribir(Persona persona){
+
+    public void inscribir(Persona persona) {
+        for (Persona p : listadoInscripcionPersonas) {
+            if (p.getID().equals(persona.getID())) {
+                System.out.println("Error: La persona con ID " + persona.getID() + " ya está inscrita.");
+                return;
+            }
+        }
         listadoInscripcionPersonas.add(persona);
+        System.out.println("Persona inscrita exitosamente.");
     }
+
+
     
-    public void eliminar(Persona persona){
-        listadoInscripcionPersonas.remove(persona);
+    public void eliminar(Persona persona, String nombreArchivo) {
+        boolean personaEncontrada  = false;
+
+        for (int i = 0; i < listadoInscripcionPersonas.size(); i++){
+            if (Objects.equals(listadoInscripcionPersonas.get(i).getID(), persona.getID())){
+                listadoInscripcionPersonas.remove(i);
+                personaEncontrada = true;
+                System.out.println("Persona eliminada exitosamente.");
+                break;
+            }
+        }
+        if (!personaEncontrada){
+            System.out.println("No se encontro a la persona inscrita");
+        }
     }
     
     public void actualizar(Persona persona){
+        boolean personaEncontrada  = false;
+
         for (int i = 0; i < listadoInscripcionPersonas.size(); i++){
-            if (listadoInscripcionPersonas.get(i).getID() == persona.getID()){
+            if (Objects.equals(listadoInscripcionPersonas.get(i).getID(), persona.getID())){
                 listadoInscripcionPersonas.set(i, persona);
+                personaEncontrada = true;
+                System.out.println("Persona actualizada exitosamente.");
                 break;
+
             }
+        }
+        if (!personaEncontrada){
+            System.out.println("No se encontro a la persona inscrita");
         }
     }
     
     public void guardarInformacion(String nombreArchivo) {
         try (FileOutputStream fos = new FileOutputStream(nombreArchivo);
-             DataOutputStream dos = new DataOutputStream(fos)) {
-             
-            // Escribimos el número de personas en el archivo
-            dos.writeInt(listadoInscripcionPersonas.size());
-
-            // Escribimos los atributos de cada Persona (ID y nombre)
-            for (Persona persona : listadoInscripcionPersonas) {
-                dos.writeDouble(persona.getID());   // Escribimos el ID como entero
-                dos.writeUTF(persona.getNombres());  // Escribimos el nombre como cadena UTF
-            }
-            
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(listadoInscripcionPersonas);
+            oos.close();
+            fos.close();
             System.out.println("Información guardada exitosamente.");
         } catch (IOException e) {
-            System.out.println("Error al guardar la información: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
 
     public void cargarDatos(String nombreArchivo) {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(nombreArchivo))) {
-            listadoInscripcionPersonas = (List<Persona>) ois.readObject();  // Leemos la lista de personas desde el archivo
-            System.out.println("Datos de personas cargados exitosamente.");
+        try (FileInputStream fis = new FileInputStream(nombreArchivo);
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            listadoInscripcionPersonas = (List<Persona>) ois.readObject();  // Leemos la lista completa
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println( e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
