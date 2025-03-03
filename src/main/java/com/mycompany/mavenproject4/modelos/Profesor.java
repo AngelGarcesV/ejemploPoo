@@ -4,13 +4,20 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
 import java.io.Serializable;
 
 /**
  *
  * @author Estudiante_MCA
  */
+@Entity
 public class Profesor extends Persona implements Serializable {
+    @Column(name = "tipoContrato")
     private String TipoContrato;
     
     public Profesor(String TipoContrato){
@@ -18,9 +25,13 @@ public class Profesor extends Persona implements Serializable {
        
     }
 
-    public Profesor(String TipoContrato, Double ID, String nombres, String apellidos, String email) {
+    public Profesor(String TipoContrato, Long ID, String nombres, String apellidos, String email) {
         super(ID, nombres, apellidos, email);
         this.TipoContrato = TipoContrato;
+    }
+
+    public Profesor() {
+
     }
 
     public String getTipoContrato() {

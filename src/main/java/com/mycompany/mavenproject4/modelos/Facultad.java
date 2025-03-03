@@ -16,14 +16,15 @@ import java.io.Serializable;
 @Table(name="Facultad")
 public class Facultad implements Serializable {
     @Id
-    private Double ID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long ID;
     @Column(name="nombre")
     private String nombre;
     @OneToOne
     @JoinColumn(name = "decano")
     private Persona decano;
     
-    public Facultad(Double ID, String nombre, Persona decano){
+    public Facultad(Long ID, String nombre, Persona decano){
         this.ID = ID;
         this.nombre = nombre;
         this.decano = decano;
@@ -33,11 +34,11 @@ public class Facultad implements Serializable {
 
     }
 
-    public Double getID() {
+    public Long getID() {
         return ID;
     }
 
-    public void setID(Double ID) {
+    public void setID(Long ID) {
         this.ID = ID;
     }
 

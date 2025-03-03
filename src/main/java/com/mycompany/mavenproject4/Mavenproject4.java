@@ -1,111 +1,280 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.mycompany.mavenproject4;
+import com.mycompany.mavenproject4.Formularios.*;
+import javax.swing.*;
+import java.awt.*;
 
-import com.mycompany.mavenproject4.modelos.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- *
- * @author Estudiante_MCA
- */
-public class Mavenproject4 {
-
-    public static void main(String[] args) {
-
-        String ArchivoInformacionInscritos = "informacionInscritos.dat";
-        String ArchivoCurosProfesores = "curosProfesores.dat";
-        String ArchivoInscripciones = "inscripciones.dat";
-
-        Persona decanoIngenieria = new Persona(1.0,"richard", "staldman", "richard@nose.com");
-
-        // Apartado Cursos Inscritos
-
-        Facultad facultadIngenieria = new Facultad(1.0,"ingenieria", decanoIngenieria);
-
-        Programa ingSistemas = new Programa(1.0, "sistemas", 40.0, facultadIngenieria, "presencial");
-        Curso poo = new Curso(1L, ingSistemas, true);
-        Estudiante estudiante1 = new Estudiante(12345.0,ingSistemas,true,4.5,1.0,"Juan","Pérez", "juanperez@email.com");
-        Inscripcion Inscripcion1 = new Inscripcion(poo,2022, 3, estudiante1);
-
-        Programa ingAmbiental = new Programa(2.0, "ambiental", 46.0, facultadIngenieria, "ambiental");
-        Curso integral = new Curso(2L, ingSistemas, true);
-        Estudiante estudiante2 = new Estudiante(161104812.0, ingAmbiental, true, 3.4, 2.0, "Santiago", "Cortes", "scortes@email.com");
-        Inscripcion Inscripcion2 = new Inscripcion(integral, 2024, 2, estudiante2);
+public class Mavenproject4  {
+        public static void main(String[] args) {
+            String ArchivoInformacionInscritos = "informacionInscritos.dat";
+            FormulariosPersona.inscripcionesPersonas.cargarDatos(ArchivoInformacionInscritos);
+            String ArchivoInscripciones = "Inscripciones.dat";
+            FormulariosInscripcion.cursosInscritos.cargarDatos(ArchivoInscripciones);
+            String ArchivoCursosProfesor = "CursosProfesores.dat";
+            FormulariosCursoProfesor.inscripcionCursosProfesores.cargarDatos(ArchivoCursosProfesor);
 
 
 
-        List<Inscripcion> listadoInscripciones = new ArrayList<Inscripcion>();
-        CursosInscritos listadoCursosInscritos = new CursosInscritos(listadoInscripciones);
+            JFrame frame = new JFrame("Interfaz con pestañas y botones");
+            frame.setSize(1200, 720);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        System.out.println("/// Carga de información cursos inscritos desde arhcivo///\n");
-        listadoCursosInscritos.cargarDatos(ArchivoInscripciones);
+            // Crear un JTabbedPane para las pestañas
+            JTabbedPane tabbedPane = new JTabbedPane();
 
-        System.out.println("//Inscripcion de cursos\n");
-        listadoCursosInscritos.inscribir(Inscripcion1);
-        listadoCursosInscritos.inscribir(Inscripcion2);
-        listadoCursosInscritos.guardarInformacion(ArchivoInscripciones);
-        listadoCursosInscritos.cargarDatos(ArchivoInscripciones);
+            // Crear los paneles de cada pestaña
+            JPanel panelPersona = crearPanelBotones("Menú Persona");
+            JPanel panelEstudiante = crearPanelBotones("Menú Estudiante");
+            JPanel panelProfesor = crearPanelBotones("Menú Profesor");
+            JPanel panelFacultad = crearPanelBotones("Menú Facultad");
+            JPanel panelPrograma = crearPanelBotones("Menú Programa");
+            JPanel panelCurso = crearPanelBotones("Menú Curso");
+            JPanel panelCursoProfesor = crearPanelBotones("Menú Curso Profesor");
+            JPanel panelInscripcionCursos = crearPanelBotones("Menú Cursos Inscritos");
 
-        //para actualizar una inscripción esta debe de tener el mismo id de estudiante y curso
-        //que el registro que se desea actualizar
+            // Añadir los paneles al JTabbedPane
+            tabbedPane.addTab("PERSONA", panelPersona);
+            tabbedPane.addTab("ESTUDIANTE", panelEstudiante);
+            tabbedPane.addTab("PROFESOR", panelProfesor);
+            tabbedPane.addTab("FACULTAD", panelFacultad);
+            tabbedPane.addTab("PROGRAMA", panelPrograma);
+            tabbedPane.addTab("CURSO", panelCurso);
+            tabbedPane.addTab("CURSO PROFESOR", panelCursoProfesor);
+            tabbedPane.addTab("CURSOS INSCRITOS", panelInscripcionCursos);
 
-        System.out.println("\n/// Actualizar inscripción///\n");
-        Inscripcion2.setAño(2014);
-        listadoCursosInscritos.actualizar(Inscripcion2);
-        listadoCursosInscritos.guardarInformacion(ArchivoInscripciones);
-        listadoCursosInscritos.cargarDatos(ArchivoInscripciones);
+            // Añadir el JTabbedPane al frame
+            frame.add(tabbedPane, BorderLayout.CENTER);
 
-        System.out.println("\n/// Eliminar inscripción///\n");Inscripcion2.setAño(2014);
-        listadoCursosInscritos.eliminar(Inscripcion1);
-        listadoCursosInscritos.guardarInformacion(ArchivoInscripciones);
-        listadoCursosInscritos.cargarDatos(ArchivoInscripciones);
+            // Mostrar la ventana
+            frame.setVisible(true);
+        }
 
-        System.out.println("\n/// Cantidad Actual Cursos inscritos///\n");
+    private static JPanel crearPanelBotones(String menu) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        System.out.println (listadoCursosInscritos.cantidadActual());
+        // Título de la pestaña
+        JLabel label = new JLabel(menu, JLabel.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 16));
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        panel.add(label, gbc);
+        gbc.gridwidth = 1;
 
-        System.out.println("\n/// Imprimir listado Cursos Inscritos\n");
-        listadoCursosInscritos.imprimirListado();
-        System.out.println("\n/// Imprimir posicion cursos inscritos\n");
-        listadoCursosInscritos.imprimirPosicion(0);
+        // Crear los botones
+        String[] buttonLabels = { "CREAR", "VER TODOS", "VER POR ID", "ACTUALIZAR", "ELIMINAR" };
+        for (String labelText : buttonLabels) {
+            JButton button = new JButton(labelText);
+            button.setPreferredSize(new Dimension(200, 100));
+            gbc.gridx = 0;
+            gbc.gridy = GridBagConstraints.RELATIVE;
+            panel.add(button, gbc);
 
+            // Asignar acción según el menú y el botón
+            asignarAccionBoton(labelText, menu, button);
+        }
 
+        return panel;
+    }
 
-        //// profesor
+    private static void asignarAccionBoton(String labelText, String menu, JButton button) {
+        switch (menu) {
+            case "Menú Persona":
+                asignarAccionesPersona(labelText, button);
+                break;
+            case "Menú Estudiante":
+                asignarAccionesEstudiante(labelText, button);
+                break;
+            case "Menú Profesor":
+                asignarAccionesProfesor(labelText, button);
+                break;
+            case "Menú Facultad":
+                asignarAccionesFacultad(labelText, button);
+                break;
+            case "Menú Programa":
+                asignarAccionesPrograma(labelText, button);
+                break;
+            case "Menú Curso Profesor":
+                asignarAccionesCursoProfesor(labelText, button);
+                break;
+            case "Menú Curso":
+                asignarAccionesCurso(labelText, button);
+                break;
+            case "Menú Cursos Inscritos":
+                asignarAccionesInscripcion(labelText, button);
+                break;
+            default:
+                break;
+        }
+    }
 
-        Profesor profesor1 = new Profesor("OPS", 1.0,"nestor", "suat", "suat@gmail.com");
-        Profesor profesor2 = new Profesor("Nomina", 1.0,"Frankie", "Ruiz", "fruiz@gmail.com");
+    private static void asignarAccionesPersona(String labelText, JButton button) {
+        switch (labelText) {
+            case "CREAR":
+                button.addActionListener(e -> FormulariosPersona.mostrarFormularioCrearPersona());
+                break;
+            case "ACTUALIZAR":
+                button.addActionListener(e -> FormulariosPersona.mostrarFormularioActualizarPersona());
+                break;
+            case "ELIMINAR":
+                button.addActionListener(e -> FormulariosPersona.mostrarFormularioEliminarPersona());
+                break;
+            case "VER POR ID":
+                button.addActionListener(e -> FormulariosPersona.mostrarFormularioVerPersonaPorId());
+                break;
+            case "VER TODOS":
+                button.addActionListener(e -> FormulariosPersona.mostrarTablaTodasPersonas());
 
-        CursoProfesor cursoProfesor1 = new CursoProfesor(profesor1,2025,2,poo);
-        CursoProfesor cursoProfesor2 = new CursoProfesor(profesor2, 2022,2,integral);
+            default:
+                break;
+        }
+    }
 
-        List<CursoProfesor> cursoProfesorList = new ArrayList<CursoProfesor>();
+    private static void asignarAccionesEstudiante(String labelText, JButton button) {
+        switch (labelText) {
+            case "CREAR":
+                button.addActionListener(e -> FormulariosEstudiante.mostrarFormularioCrearEstudiante());
+                break;
+            case "ACTUALIZAR":
+                button.addActionListener(e -> FormulariosEstudiante.mostrarFormularioActualizarEstudiante());
+                break;
+            case "ELIMINAR":
+                button.addActionListener(e -> FormulariosEstudiante.mostrarFormularioEliminarEstudiante());
+                break;
+            case "VER POR ID":
+                button.addActionListener(e -> FormulariosEstudiante.mostrarFormularioVerEstudiantePorId());
+                break;
+            case "VER TODOS":
+                button.addActionListener(e -> FormulariosEstudiante.mostrarTablaTodosEstudiantes());
+            default:
+                break;
+        }
+    }
 
-        CursosProfesores listadoCursoProfesores = new CursosProfesores(cursoProfesorList);
+    private static void asignarAccionesProfesor(String labelText, JButton button) {
+        switch (labelText) {
+            case "CREAR":
+                button.addActionListener(e -> FormulariosProfesor.mostrarFormularioCrearProfesor());
+                break;
+            case "ACTUALIZAR":
+                button.addActionListener(e -> FormulariosProfesor.mostrarFormularioActualizarProfesor());
+                break;
+            case "ELIMINAR":
+                button.addActionListener(e -> FormulariosProfesor.mostrarFormularioEliminarProfesor());
+                break;
+            case "VER POR ID":
+                button.addActionListener(e -> FormulariosProfesor.mostrarFormularioVerProfesorPorId());
+                break;
+            case "VER TODOS":
+                button.addActionListener(e -> FormulariosProfesor.mostrarTablaTodosProfesores());
+            default:
+                break;
+        }
+    }
 
-        System.out.println("\n// Cargar información inicial//\n");
-        listadoCursoProfesores.cargarDatos(ArchivoCurosProfesores);
+    private static void asignarAccionesFacultad(String labelText, JButton button) {
+        switch (labelText) {
+            case "CREAR":
+                button.addActionListener(e -> FormulariosFacultad.mostrarFormularioCrearFacultad());
+                break;
+            case "ACTUALIZAR":
+                button.addActionListener(e -> FormulariosFacultad.mostrarFormularioActualizarFacultad());
+                break;
+            case "ELIMINAR":
+                button.addActionListener(e -> FormulariosFacultad.mostrarFormularioEliminarFacultad());
+                break;
+            case "VER POR ID":
+                button.addActionListener(e -> FormulariosFacultad.mostrarFormularioVerFacultadPorId());
+                break;
+            case "VER TODOS":
+                button.addActionListener(e -> FormulariosFacultad.mostrarTodosFacultad());
+            default:
+                break;
+        }
+    }
 
-        System.out.println("\n// Incribir curso profesor//\n");
-        listadoCursoProfesores.inscribir(cursoProfesor1);
-        listadoCursoProfesores.inscribir(cursoProfesor2);
-        listadoCursoProfesores.guardarInformacion(ArchivoCurosProfesores);
-        listadoCursoProfesores.cargarDatos(ArchivoCurosProfesores);
+    private static void asignarAccionesPrograma(String labelText, JButton button) {
+        switch (labelText) {
+            case "CREAR":
+                button.addActionListener(e -> FormulariosPrograma.mostrarFormularioCrearPrograma());
+                break;
+            case "ACTUALIZAR":
+                button.addActionListener(e -> FormulariosPrograma.mostrarFormularioActualizarPrograma());
+                break;
+            case "ELIMINAR":
+                button.addActionListener(e -> FormulariosPrograma.mostrarFormularioEliminarPrograma());
+                break;
+            case "VER POR ID":
+                button.addActionListener(e -> FormulariosPrograma.mostrarFormularioVerProgramaPorId());
+                break;
+            case "VER TODOS":
+                button.addActionListener(e -> FormulariosPrograma.mostrarTodosPrograma());
+            default:
+                break;
+        }
+    }
 
-        System.out.println("\n/// Cantidad Actual Cursos Profesor///\n");
-        System.out.println(listadoCursoProfesores.cantidadActual());
+    private static void asignarAccionesCursoProfesor(String labelText, JButton button) {
+        switch (labelText) {
+            case "CREAR":
+                button.addActionListener(e -> FormulariosCursoProfesor.mostrarFormularioCrearCursoProfesor());
+                break;
+            case "ACTUALIZAR":
+                button.addActionListener(e -> FormulariosCursoProfesor.mostrarFormularioActualizarCursoProfesor());
+                break;
+            case "ELIMINAR":
+                button.addActionListener(e -> FormulariosCursoProfesor.mostrarFormularioEliminarCursoProfesor());
+                break;
+            case "VER POR ID":
+                button.addActionListener(e -> FormulariosCursoProfesor.mostrarFormularioVerCursoProfesorPorId());
+                break;
+            case "VER TODOS":
+                button.addActionListener(e -> FormulariosCursoProfesor.mostrarTablaCursoProfesor());
+            default:
+                break;
+        }
+    }
 
-        System.out.println("\n/// Imprimir Listado Cursos Profesor///\n");
-        listadoCursoProfesores.imprimirListado();
+    private static void asignarAccionesCurso(String labelText, JButton button) {
+        switch (labelText) {
+            case "CREAR":
+                button.addActionListener(e -> FormulariosCurso.mostrarFormularioCrearCurso());
+                break;
+            case "ACTUALIZAR":
+                button.addActionListener(e -> FormulariosCurso.mostrarFormularioActualizarCurso());
+                break;
+            case "ELIMINAR":
+                button.addActionListener(e -> FormulariosCurso.mostrarFormularioEliminarCurso());
+                break;
+            case "VER POR ID":
+                button.addActionListener(e -> FormulariosCurso.mostrarFormularioVerCursoPorId());
+                break;
+            case "VER TODOS":
+                button.addActionListener(e -> FormulariosCurso.mostrarTablaTodosCursos());
+            default:
+                break;
+        }
+    }
 
-        System.out.println("\n/// Imprimir posicion cursos inscritos\n");
-        listadoCursoProfesores.imprimirPosicion(0);
-
-
+    private static void asignarAccionesInscripcion(String labelText, JButton button) {
+        switch (labelText) {
+            case "CREAR":
+                button.addActionListener(e -> FormulariosInscripcion.mostrarFormularioCrearInscripcion());
+                break;
+            case "ACTUALIZAR":
+                button.addActionListener(e -> FormulariosInscripcion.mostrarFormularioActualizarInscripcion());
+                break;
+            case "ELIMINAR":
+                button.addActionListener(e -> FormulariosInscripcion.mostrarFormularioEliminarInscripcion());
+                break;
+            case "VER POR ID":
+                button.addActionListener(e -> FormulariosInscripcion.mostrarFormularioVerInscripcionPorId());
+                break;
+            case "VER TODOS":
+                button.addActionListener(e -> FormulariosInscripcion.mostrarTablaTodasInscripciones());
+            default:
+                break;
+        }
     }
 }

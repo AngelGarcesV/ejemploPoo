@@ -17,8 +17,8 @@ import java.io.Serializable;
 public class Curso implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @ManyToOne
+    private  Long id;
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name="programa_id")
     private Programa programa;
     @Column (name = "activo")
@@ -44,7 +44,7 @@ public class Curso implements Serializable {
         this.activo = activo;
     }
     
-    public Curso(Long ID, Programa programa, Boolean activo){
+    public Curso( Long ID, Programa programa, Boolean activo){
         this.id = ID;
         this.programa = programa;
         this.activo = activo;
@@ -61,6 +61,4 @@ public class Curso implements Serializable {
     public Long getID() {
         return id;
     }
-
-
 }

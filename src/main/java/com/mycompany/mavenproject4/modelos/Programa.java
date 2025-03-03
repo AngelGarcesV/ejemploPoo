@@ -7,6 +7,7 @@ package com.mycompany.mavenproject4.modelos;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -16,18 +17,19 @@ import java.io.Serializable;
 @Table(name = "Programa")
 public class Programa implements Serializable {
     @Id
-    private Double ID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long ID;
     @Column(name = "nombre")
     private String nombre;
     @Column(name = "duracion")
-    private Double duracion;
-    @ManyToOne
+    private Long duracion;
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "facultad_id")
     private Facultad facultad;
     @Column(name = "registro")
-    private String registro;
+    private Date registro;
     
-    public Programa(Double ID, String nombre, Double duracion, Facultad facultad, String registro){
+    public Programa(Long ID, String nombre, Long duracion, Facultad facultad, Date registro){
         this.ID = ID;
         this.nombre = nombre;
         this.duracion = duracion;
@@ -39,11 +41,11 @@ public class Programa implements Serializable {
 
     }
 
-    public Double getID() {
+    public Long getID() {
         return ID;
     }
 
-    public void setID(Double ID) {
+    public void setID(Long ID) {
         this.ID = ID;
     }
 
@@ -55,11 +57,11 @@ public class Programa implements Serializable {
         this.nombre = nombre;
     }
 
-    public Double getDuracion() {
+    public Long getDuracion() {
         return duracion;
     }
 
-    public void setDuracion(Double duracion) {
+    public void setDuracion(Long duracion) {
         this.duracion = duracion;
     }
 
@@ -71,11 +73,11 @@ public class Programa implements Serializable {
         this.facultad = facultad;
     }
 
-    public String getRegistro() {
+    public Date getRegistro() {
         return registro;
     }
 
-    public void setRegistro(String registro) {
+    public void setRegistro(Date registro) {
         this.registro = registro;
     }
     @Override

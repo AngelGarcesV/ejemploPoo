@@ -25,6 +25,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.toedter</groupId>
+            <artifactId>jcalendar</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+
         <!-- JPA (Jakarta Persistence API) -->
         <dependency>
             <groupId>jakarta.persistence</groupId>

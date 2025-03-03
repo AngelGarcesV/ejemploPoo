@@ -2,11 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.mavenproject4.modelos;
+package com.mycompany.mavenproject4.Controladores;
+
+import com.mycompany.mavenproject4.modelos.Persona;
+import com.mycompany.mavenproject4.repositorios.personaRepo;
 
 import java.io.*;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -14,42 +16,50 @@ import java.util.Objects;
  * @author Estudiante_MCA
  */
 public class InscripcionesPersonas implements Serializable {
-
+    private  personaRepo personaRepository = new personaRepo();
     private List<Persona> listadoInscripcionPersonas;
 
     public InscripcionesPersonas(List<Persona> listadoInscripcionPersonas) {
         this.listadoInscripcionPersonas = listadoInscripcionPersonas;
     }
 
-    public void inscribir(Persona persona) {
-        for (Persona p : listadoInscripcionPersonas) {
-            if (p.getID().equals(persona.getID())) {
-                System.out.println("Error: La persona con ID " + persona.getID() + " ya está inscrita.");
-                return;
-            }
+
+    public Persona inscribir(Persona infoPersona) {
+        try{
+            listadoInscripcionPersonas.add(infoPersona);
+            System.out.println("Persona inscrita exitosamente.");
+            return infoPersona;
         }
-        listadoInscripcionPersonas.add(persona);
-        System.out.println("Persona inscrita exitosamente.");
+        catch(Exception e){
+            return null;
+        }
     }
 
 
     
-    public void eliminar(Persona persona, String nombreArchivo) {
-        boolean personaEncontrada  = false;
-
-        for (int i = 0; i < listadoInscripcionPersonas.size(); i++){
-            if (Objects.equals(listadoInscripcionPersonas.get(i).getID(), persona.getID())){
-                listadoInscripcionPersonas.remove(i);
-                personaEncontrada = true;
-                System.out.println("Persona eliminada exitosamente.");
-                break;
+    public Boolean eliminar(Long id, String nombreArchivo) {
+        try{
+            boolean personaEncontrada  = false;
+            if(personaRepository.eliminarPersona(id)){
+                for (int i = 0; i < listadoInscripcionPersonas.size(); i++){
+                    if (Objects.equals(listadoInscripcionPersonas.get(i).getID(), id)){
+                        listadoInscripcionPersonas.remove(i);
+                        personaEncontrada = true;
+                        System.out.println("Persona eliminada exitosamente.");
+                        break;
+                    }
+                }
+                return personaEncontrada;
+            }else{
+                System.out.println("No se encontro a la persona inscrita");
+                return personaEncontrada;
             }
-        }
-        if (!personaEncontrada){
-            System.out.println("No se encontro a la persona inscrita");
+
+        }catch (Exception e){
+            return null;
         }
     }
-    
+
     public void actualizar(Persona persona){
         boolean personaEncontrada  = false;
 
@@ -67,7 +77,7 @@ public class InscripcionesPersonas implements Serializable {
         }
     }
     
-    public void guardarInformacion(String nombreArchivo) {
+    public void guardarInformacionArchivo(String nombreArchivo) {
         try (FileOutputStream fos = new FileOutputStream(nombreArchivo);
              ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(listadoInscripcionPersonas);
@@ -96,8 +106,4 @@ public class InscripcionesPersonas implements Serializable {
     public void setListadoInscripcionPersonas(List<Persona> listadoInscripcionPersonas) {
         this.listadoInscripcionPersonas = listadoInscripcionPersonas;
     }
-    
-    
-    
-    
 }

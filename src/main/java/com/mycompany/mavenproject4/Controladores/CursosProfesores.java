@@ -1,5 +1,6 @@
-package com.mycompany.mavenproject4.modelos;
+package com.mycompany.mavenproject4.Controladores;
 
+import com.mycompany.mavenproject4.modelos.CursoProfesor;
 import com.mycompany.mavenproject4.modelos.interfaces.Servicios;
 import java.io.*;
 import java.util.List;

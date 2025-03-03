@@ -4,23 +4,34 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 
 /**
  *
  * @author Estudiante_MCA
  */
+@Entity
 public class Estudiante extends Persona implements Serializable {
-    private Double codigo;
+    private double codigo;
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "programa_id")
     private Programa programa;
+    @Column(name = "activo")
     private Boolean activo;
+    @Column(name= "promedio")
     private Double promedio;
 
-    public Double getCodigo() {
+    public Estudiante() {
+
+    }
+
+    public double getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(Double codigo) {
+    public void setCodigo(double codigo) {
         this.codigo = codigo;
     }
 
@@ -48,7 +59,7 @@ public class Estudiante extends Persona implements Serializable {
         this.promedio = promedio;
     }
 
-    public Estudiante(Double codigo, Programa programa, Boolean activo, Double promedio, Double ID, String nombres, String apellidos, String email) {
+    public Estudiante(double codigo, Programa programa, Boolean activo, Double promedio, Long ID, String nombres, String apellidos, String email) {
         super(ID, nombres, apellidos, email);
         this.codigo = codigo;
         this.programa = programa;

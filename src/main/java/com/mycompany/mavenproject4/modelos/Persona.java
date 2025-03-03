@@ -4,10 +4,7 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 
@@ -16,10 +13,12 @@ import java.io.Serializable;
  * @author Estudiante_MCA
  */
 @Entity
-@Table(name = "Persona")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorColumn(name = "tipo_persona", discriminatorType = DiscriminatorType.STRING)
 public class Persona implements Serializable {
     @Id
-    private Double ID;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long ID;
     @Column(name = "nombres")
     private String nombres;
     @Column (name = "apellidos")
@@ -27,7 +26,7 @@ public class Persona implements Serializable {
     @Column(name = "email")
     private String email;
 
-    public Persona(Double ID, String nombres, String apellidos, String email) {
+    public Persona(Long ID, String nombres, String apellidos, String email) {
         this.ID = ID;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -37,11 +36,11 @@ public class Persona implements Serializable {
     public Persona() {
     }
 
-    public Double getID() {
+    public Long getID() {
         return ID;
     }
 
-    public void setID(Double ID) {
+    public void setID(Long ID) {
         this.ID = ID;
     }
 
