@@ -12,21 +12,11 @@ import java.io.Serializable;
  *
  * @author Estudiante_MCA
  */
-@Entity
-@Table(name = "Inscripcion")
 public class Inscripcion implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "curso_id")
     private Curso curso;
-    @Column(name = "año")
     private int año;
-    @Column(name = "semestre")
     private int semestre;
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "estudiante_id")
     private Estudiante estudiante;
     
     public Inscripcion(Long id, Curso curso, int año, int semestre, Estudiante estudiante){

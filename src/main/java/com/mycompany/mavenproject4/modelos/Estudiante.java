@@ -12,20 +12,12 @@ import java.io.Serializable;
  *
  * @author Estudiante_MCA
  */
-@Entity
 public class Estudiante extends Persona implements Serializable {
     private double codigo;
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "programa_id")
     private Programa programa;
-    @Column(name = "activo")
     private Boolean activo;
-    @Column(name= "promedio")
     private Double promedio;
 
-    public Estudiante() {
-
-    }
 
     public double getCodigo() {
         return codigo;
@@ -66,6 +58,7 @@ public class Estudiante extends Persona implements Serializable {
         this.activo = activo;
         this.promedio = promedio;
     }
+
 
     @Override
     public String toString() {

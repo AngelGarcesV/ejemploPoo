@@ -26,7 +26,7 @@ public class FormulariosPrograma {
         JFrame formularioFrame = new JFrame("Formulario Crear Programa");
         formularioFrame.setSize(400, 300);
         formularioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        formularioFrame.setLayout(new GridLayout(5, 2)); // Ajuste de filas
+        formularioFrame.setLayout(new GridLayout(5, 2));
 
         JLabel nombreLabel = new JLabel("Nombre:");
         JTextField nombreField = new JTextField();
@@ -36,7 +36,7 @@ public class FormulariosPrograma {
         JTextField idFacultadField = new JTextField();
         JLabel registroLabel = new JLabel("Registro:");
 
-        // Componente JDateChooser para la fecha
+
         JDateChooser registroChooser = new JDateChooser();
         registroChooser.setDateFormatString("dd/MM/yyyy");
 
@@ -49,14 +49,13 @@ public class FormulariosPrograma {
                     String nombre = nombreField.getText();
                     Long duracion = Long.parseLong(duracionField.getText());
                     Long idFacultad = Long.parseLong(idFacultadField.getText());
-                    Date registro = registroChooser.getDate(); // Obtener la fecha seleccionada
+                    Date registro = registroChooser.getDate();
 
                     if (registro == null) {
                         JOptionPane.showMessageDialog(formularioFrame, "Seleccione una fecha válida", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
 
-                    // Obtener la facultad
                     Facultad infoFacultad = repositorioFacultad.obtenerFacultadByID(idFacultad);
 
                     if (infoFacultad != null) {
@@ -72,7 +71,6 @@ public class FormulariosPrograma {
                     JOptionPane.showMessageDialog(formularioFrame, "Ocurrió un error al crear el programa", "Error", JOptionPane.ERROR_MESSAGE);
                 }
 
-                // Cerrar el formulario
                 formularioFrame.dispose();
             }
         });
@@ -85,10 +83,9 @@ public class FormulariosPrograma {
         formularioFrame.add(idFacultadField);
         formularioFrame.add(registroLabel);
         formularioFrame.add(registroChooser);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(crearButton);
 
-        // Mostrar el formulario
         formularioFrame.setVisible(true);
     }
 
@@ -119,17 +116,15 @@ public class FormulariosPrograma {
                     JOptionPane.showMessageDialog(formularioFrame, "No se pudo eliminar el registro", "error", JOptionPane.ERROR_MESSAGE);
                 }
 
-                // Cerrar el formulario
                 formularioFrame.dispose();
             }
         });
 
         formularioFrame.add(idLabel);
         formularioFrame.add(idField);
-        formularioFrame.add(new JLabel());  // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(eliminarButton);
 
-        // Mostrar el formulario
         formularioFrame.setVisible(true);
     }
 
@@ -148,7 +143,6 @@ public class FormulariosPrograma {
         inputPanel.add(idField);
         inputPanel.add(verButton);
 
-        // Crear la tabla
         String[] columnNames = {"ID", "Duración", "Nombre", "Registro", "Facultad_ID"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
@@ -162,7 +156,6 @@ public class FormulariosPrograma {
                     Programa programa = repositorioPrograma.obtenerProgramaByID(idPrograma);
 
                     if (programa != null) {
-                        // Limpiar la tabla antes de agregar nuevos datos
                         tableModel.setRowCount(0);
 
                         Object[] rowData = {
@@ -239,14 +232,12 @@ public class FormulariosPrograma {
 
         JButton actualizarButton = new JButton("Actualizar");
 
-        // Deshabilitar campos hasta que se busque un programa
         nombreField.setEnabled(false);
         duracionField.setEnabled(false);
         idFacultadField.setEnabled(false);
         registroChooser.setEnabled(false);
         actualizarButton.setEnabled(false);
 
-        // Acción del botón Buscar
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -254,7 +245,6 @@ public class FormulariosPrograma {
             }
         });
 
-        // Acción del botón Actualizar
         actualizarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -291,7 +281,7 @@ public class FormulariosPrograma {
 
         formularioFrame.add(idLabel);
         formularioFrame.add(idField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(buscarButton);
         formularioFrame.add(nombreLabel);
         formularioFrame.add(nombreField);
@@ -301,13 +291,12 @@ public class FormulariosPrograma {
         formularioFrame.add(idFacultadField);
         formularioFrame.add(registroLabel);
         formularioFrame.add(registroChooser);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(actualizarButton);
 
         formularioFrame.setVisible(true);
     }
 
-    // Función separada para buscar programa por ID
     public static void botonBuscarPrograma_FormularioActualizar(JTextField idField, JTextField nombreField, JTextField duracionField,
                                            JTextField idFacultadField, JDateChooser registroChooser,
                                            JButton actualizarButton, JFrame frame) {
@@ -322,13 +311,11 @@ public class FormulariosPrograma {
             Programa programa = repositorioPrograma.obtenerProgramaByID(idPrograma);
 
             if (programa != null) {
-                // Cargar datos en los campos
                 nombreField.setText(programa.getNombre());
                 duracionField.setText(String.valueOf(programa.getDuracion()));
                 idFacultadField.setText(String.valueOf(programa.getFacultad().getID()));
                 registroChooser.setDate(programa.getRegistro());
 
-                // Habilitar los campos de edición y el botón Actualizar
                 nombreField.setEnabled(true);
                 duracionField.setEnabled(true);
                 idFacultadField.setEnabled(true);

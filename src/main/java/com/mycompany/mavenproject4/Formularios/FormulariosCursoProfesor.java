@@ -74,7 +74,7 @@ public class FormulariosCursoProfesor {
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(formularioFrame, ex.getMessage());
                 }
-                // Cerrar el formulario
+
                 formularioFrame.dispose();
             }
         });
@@ -87,10 +87,10 @@ public class FormulariosCursoProfesor {
         formularioFrame.add(semestreField);
         formularioFrame.add(cursoLabel);
         formularioFrame.add(cursoField);
-        formularioFrame.add(new JLabel());  // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(crearButton);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
 
@@ -121,17 +121,17 @@ public class FormulariosCursoProfesor {
                     JOptionPane.showMessageDialog(formularioFrame, ex.getMessage());
                 }
 
-                // Cerrar el formulario
+
                 formularioFrame.dispose();
             }
         });
 
         formularioFrame.add(idLabel);
         formularioFrame.add(idField);
-        formularioFrame.add(new JLabel());  // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(eliminarButton);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
 
@@ -150,7 +150,7 @@ public class FormulariosCursoProfesor {
         inputPanel.add(idField);
         inputPanel.add(verButton);
 
-        // Definir las columnas de la tabla
+
         String[] columnNames = {"ID", "AÑO", "SEMESTRE", "CURSO_ID", "PROFESOR_ID"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
@@ -164,7 +164,7 @@ public class FormulariosCursoProfesor {
                     CursoProfesor cursoProfesor = repositorioCursoProfesor.obtenerCursoProfesorByID(idCursoProfesor);
 
                     if (cursoProfesor != null) {
-                        // Limpiar la tabla antes de agregar nuevos datos
+
                         tableModel.setRowCount(0);
 
                         Object[] rowData = {
@@ -238,14 +238,14 @@ public class FormulariosCursoProfesor {
 
         JButton actualizarButton = new JButton("Actualizar");
 
-        // Deshabilitar campos hasta que se busque un CursoProfesor
+
         idProfesorField.setEnabled(false);
         añoField.setEnabled(false);
         semestreField.setEnabled(false);
         cursoField.setEnabled(false);
         actualizarButton.setEnabled(false);
 
-        // Acción del botón Buscar
+
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -253,7 +253,7 @@ public class FormulariosCursoProfesor {
             }
         });
 
-        // Acción del botón Actualizar
+
         actualizarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -285,7 +285,7 @@ public class FormulariosCursoProfesor {
 
         formularioFrame.add(idLabel);
         formularioFrame.add(idField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(buscarButton);
         formularioFrame.add(idProfesorLabel);
         formularioFrame.add(idProfesorField);
@@ -295,13 +295,13 @@ public class FormulariosCursoProfesor {
         formularioFrame.add(semestreField);
         formularioFrame.add(cursoLabel);
         formularioFrame.add(cursoField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(actualizarButton);
 
         formularioFrame.setVisible(true);
     }
 
-    // Función para buscar CursoProfesor por ID
+
     public static void buscarCursoProfesorPorId(JTextField idField, JTextField idProfesorField, JTextField añoField,
                                                 JTextField semestreField, JTextField cursoField,
                                                 JButton actualizarButton, JFrame frame) {
@@ -316,7 +316,7 @@ public class FormulariosCursoProfesor {
             CursoProfesor cursoProfesor = repositorioCursoProfesor.obtenerCursoProfesorByID(id);
 
             if (cursoProfesor != null) {
-                // Cargar datos en los campos
+
                 idProfesorField.setText(String.valueOf(cursoProfesor.getProfesor().getID()));
                 añoField.setText(String.valueOf(cursoProfesor.getAño()));
                 semestreField.setText(String.valueOf(cursoProfesor.getSemestre()));

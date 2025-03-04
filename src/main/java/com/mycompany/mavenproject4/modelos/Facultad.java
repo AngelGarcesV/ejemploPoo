@@ -12,18 +12,11 @@ import java.io.Serializable;
  *
  * @author Estudiante_MCA
  */
-@Entity
-@Table(name="Facultad")
+
 public class Facultad implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
-    @Column(name="nombre")
     private String nombre;
-    @OneToOne
-    @JoinColumn(name = "decano")
     private Persona decano;
-    
     public Facultad(Long ID, String nombre, Persona decano){
         this.ID = ID;
         this.nombre = nombre;

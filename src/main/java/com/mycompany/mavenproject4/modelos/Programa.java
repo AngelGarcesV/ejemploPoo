@@ -13,22 +13,13 @@ import java.util.Date;
  *
  * @author Estudiante_MCA
  */
-@Entity
-@Table(name = "Programa")
 public class Programa implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID;
-    @Column(name = "nombre")
-    private String nombre;
-    @Column(name = "duracion")
-    private Long duracion;
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "facultad_id")
-    private Facultad facultad;
-    @Column(name = "registro")
-    private Date registro;
-    
+        private Long ID;
+        private String nombre;
+        private Long duracion;
+        private Facultad facultad;
+        private Date registro;
+
     public Programa(Long ID, String nombre, Long duracion, Facultad facultad, Date registro){
         this.ID = ID;
         this.nombre = nombre;
@@ -82,8 +73,8 @@ public class Programa implements Serializable {
     }
     @Override
     public String toString(){
-    
+
         return "Id: "+ this.ID + " Nombre: "+ this.nombre+ " Duracion :"+ this.duracion+" Registro: " +this.registro + " Facultad: " + this.facultad;
     }
-    
+
 }

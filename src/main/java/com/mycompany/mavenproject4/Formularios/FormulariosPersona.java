@@ -21,7 +21,7 @@ public class FormulariosPersona {
 
 
     public static void guardarPersonaDB_InscribirArchivo(String nombres, String apellidos, String email, String NombreArchivo) {
-        Persona infoPersona = new Persona(null, nombres, apellidos, email);
+        Persona infoPersona = new Persona(nombres, apellidos, email);
         Persona NuevaPersona= repositorioPersona.crearPersona(infoPersona);
         if(NuevaPersona!=null){
 
@@ -34,8 +34,8 @@ public class FormulariosPersona {
     }
     public static void actualizarPersonaDB_ActualizarArchivo(Long id, String nombres, String apellidos, String email, String NombreArchivo) {
         Persona infoPersona = new Persona(id, nombres, apellidos, email);
-        Persona personaEditada = repositorioPersona.actualizarPersonaPorId(id,infoPersona);
-        if(personaEditada!=null){
+        boolean personaEditada = repositorioPersona.actualizarPersonaPorId(id,infoPersona);
+        if(personaEditada){
             inscripcionesPersonas.actualizar(infoPersona);
             inscripcionesPersonas.guardarInformacionArchivo(NombreArchivo);
             JOptionPane.showMessageDialog(null, "Persona Actualizada con exito");
@@ -72,7 +72,7 @@ public class FormulariosPersona {
                 String email = emailField.getText();
 
                 guardarPersonaDB_InscribirArchivo(nombres,apellidos,email,ArchivoInformacionInscritos);
-                // Cerrar el formulario
+
                 formularioFrame.dispose();
             }
         });
@@ -86,7 +86,7 @@ public class FormulariosPersona {
         formularioFrame.add(new JLabel());
         formularioFrame.add(crearButton);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
 
@@ -94,7 +94,7 @@ public class FormulariosPersona {
         JFrame formularioFrame = new JFrame("Formulario Eliminar Persona");
         formularioFrame.setSize(400, 300);
         formularioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        formularioFrame.setLayout(new GridLayout(2, 2));  // Solo 2 filas
+        formularioFrame.setLayout(new GridLayout(2, 2));
 
         JLabel idLabel = new JLabel("ID:");
         JTextField idField = new JTextField();
@@ -123,7 +123,7 @@ public class FormulariosPersona {
         formularioFrame.add(new JLabel());
         formularioFrame.add(eliminarButton);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
 
@@ -133,7 +133,7 @@ public class FormulariosPersona {
         formularioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         formularioFrame.setLayout(new BorderLayout());
 
-        // Panel de entrada con mejor distribución
+
         JPanel inputPanel = new JPanel(new FlowLayout());
         JLabel idLabel = new JLabel("ID:");
         JTextField idField = new JTextField(10);
@@ -143,7 +143,7 @@ public class FormulariosPersona {
         inputPanel.add(idField);
         inputPanel.add(verButton);
 
-        // Tabla para mostrar la información de la persona
+
         String[] columnNames = { "ID", "Apellidos", "Email", "Nombres" };
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
@@ -166,7 +166,7 @@ public class FormulariosPersona {
                     long idLong = Long.parseLong(idTexto);
                     Persona personaConsultada = repositorioPersona.obtenerPersonaByID(idLong);
 
-                    // Limpiar la tabla antes de agregar nuevos datos
+
                     tableModel.setRowCount(0);
 
                     if (personaConsultada != null) {
@@ -176,7 +176,7 @@ public class FormulariosPersona {
                                 personaConsultada.getEmail(),
                                 personaConsultada.getNombres()
                         };
-                        tableModel.addRow(row); // Agregar la fila con los datos de la persona
+                        tableModel.addRow(row);
                     } else {
                         JOptionPane.showMessageDialog(formularioFrame, "No se encontró la persona con el ID ingresado.", "Error", JOptionPane.WARNING_MESSAGE);
                     }
@@ -187,7 +187,7 @@ public class FormulariosPersona {
             }
         });
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
 
@@ -219,7 +219,7 @@ public class FormulariosPersona {
         formularioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         formularioFrame.setLayout(new BorderLayout());
 
-        // Panel de entrada con ID y botón Buscar
+
         JPanel inputPanel = new JPanel(new FlowLayout());
         JLabel idLabel = new JLabel("ID:");
         JTextField idField = new JTextField(10);
@@ -229,7 +229,7 @@ public class FormulariosPersona {
         inputPanel.add(idField);
         inputPanel.add(buscarButton);
 
-        // Panel de edición
+
         JPanel editPanel = new JPanel(new GridLayout(4, 2));
         JLabel nombreLabel = new JLabel("Nombres:");
         JTextField nombreField = new JTextField();
@@ -245,10 +245,10 @@ public class FormulariosPersona {
         editPanel.add(apellidoField);
         editPanel.add(emailLabel);
         editPanel.add(emailField);
-        editPanel.add(new JLabel()); // Espacio vacío
+        editPanel.add(new JLabel());
         editPanel.add(actualizarButton);
 
-        // Deshabilitar campos de edición hasta que se busque un ID
+
         nombreField.setEnabled(false);
         apellidoField.setEnabled(false);
         emailField.setEnabled(false);
@@ -257,7 +257,7 @@ public class FormulariosPersona {
         formularioFrame.add(inputPanel, BorderLayout.NORTH);
         formularioFrame.add(editPanel, BorderLayout.CENTER);
 
-        // Acción del botón Buscar
+
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -265,7 +265,7 @@ public class FormulariosPersona {
             }
         });
 
-        // Acción del botón Actualizar
+
         actualizarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -280,10 +280,9 @@ public class FormulariosPersona {
                         return;
                     }
 
-                    // Llamar a la función de actualización
+
                     actualizarPersonaDB_ActualizarArchivo(idLong, nombres, apellidos, email, ArchivoInformacionInscritos);
 
-                    // Cerrar el formulario después de actualizar
                     formularioFrame.dispose();
 
                 } catch (Exception ex) {
@@ -309,12 +308,10 @@ public class FormulariosPersona {
             Persona personaConsultada = repositorioPersona.obtenerPersonaByID(idLong);
 
             if (personaConsultada != null) {
-                // Cargar datos en los campos
                 nombreField.setText(personaConsultada.getNombres());
                 apellidoField.setText(personaConsultada.getApellidos());
                 emailField.setText(personaConsultada.getEmail());
 
-                // Habilitar los campos de edición y el botón Actualizar
                 nombreField.setEnabled(true);
                 apellidoField.setEnabled(true);
                 emailField.setEnabled(true);

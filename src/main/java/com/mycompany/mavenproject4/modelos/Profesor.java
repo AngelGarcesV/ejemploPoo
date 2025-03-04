@@ -15,9 +15,7 @@ import java.io.Serializable;
  *
  * @author Estudiante_MCA
  */
-@Entity
 public class Profesor extends Persona implements Serializable {
-    @Column(name = "tipoContrato")
     private String TipoContrato;
     
     public Profesor(String TipoContrato){

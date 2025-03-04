@@ -60,10 +60,10 @@ public class FormulariosCurso {
         formularioFrame.add(programaIdField);
         formularioFrame.add(activoLabel);
         formularioFrame.add(activoCheckBox);
-        formularioFrame.add(new JLabel());  // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(crearButton);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
 
@@ -93,17 +93,17 @@ public class FormulariosCurso {
                     JOptionPane.showMessageDialog(formularioFrame, "No fue posible eliminar el Curso");
                 }
 
-                // Cerrar el formulario
+
                 formularioFrame.dispose();
             }
         });
 
         formularioFrame.add(idLabel);
         formularioFrame.add(idField);
-        formularioFrame.add(new JLabel());  // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(eliminarButton);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
 
@@ -122,7 +122,7 @@ public class FormulariosCurso {
         inputPanel.add(idField);
         inputPanel.add(verButton);
 
-        // Definir las columnas de la tabla
+
         String[] columnNames = {"ID", "ACTIVO", "PROGRAMA_ID"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
@@ -136,7 +136,7 @@ public class FormulariosCurso {
                     Curso curso = repositorioCurso.obtenerCursoByID(idCurso);
 
                     if (curso != null) {
-                        // Limpiar la tabla antes de agregar nuevos datos
+
                         tableModel.setRowCount(0);
 
                         Object[] rowData = {
@@ -197,12 +197,12 @@ public class FormulariosCurso {
         JCheckBox activoCheckBox = new JCheckBox();
         JButton actualizarButton = new JButton("Actualizar");
 
-        // Deshabilitar campos hasta que se busque un curso
+
         programaIdField.setEnabled(false);
         activoCheckBox.setEnabled(false);
         actualizarButton.setEnabled(false);
 
-        // Acción del botón Buscar
+
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -210,7 +210,7 @@ public class FormulariosCurso {
             }
         });
 
-        // Acción del botón Actualizar
+
         actualizarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -243,13 +243,13 @@ public class FormulariosCurso {
 
         formularioFrame.add(idLabel);
         formularioFrame.add(idField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(buscarButton);
         formularioFrame.add(programaIdLabel);
         formularioFrame.add(programaIdField);
         formularioFrame.add(activoLabel);
         formularioFrame.add(activoCheckBox);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(actualizarButton);
 
         formularioFrame.setVisible(true);
@@ -268,11 +268,11 @@ public class FormulariosCurso {
             Curso curso = repositorioCurso.obtenerCursoByID(idCurso);
 
             if (curso != null) {
-                // Cargar datos en los campos
+
                 programaIdField.setText(String.valueOf(curso.getPrograma().getID()));
                 activoCheckBox.setSelected(curso.getActivo());
 
-                // Habilitar los campos de edición y el botón Actualizar
+
                 programaIdField.setEnabled(true);
                 activoCheckBox.setEnabled(true);
                 actualizarButton.setEnabled(true);

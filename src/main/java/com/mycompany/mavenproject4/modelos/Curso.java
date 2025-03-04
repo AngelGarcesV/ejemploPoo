@@ -12,16 +12,10 @@ import java.io.Serializable;
  *
  * @author Estudiante_MCA
  */
-@Entity
-@Table(name = "Curso")
+
 public class Curso implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name="programa_id")
     private Programa programa;
-    @Column (name = "activo")
     private Boolean activo;
 
     public Curso() {

@@ -33,7 +33,7 @@ public class FormulariosInscripcion {
     private static void actualizarInscripcionDB_Archivo(Long idInscripcion, Curso infoCurso, int año, int semestre, Estudiante infoEstudiante, String archivoInscripciones){
         Inscripcion inscripcionActualizada = new Inscripcion(idInscripcion, infoCurso, año, semestre, infoEstudiante);
 
-        // Lógica de actualización
+
         InscripcionRepo.actualizarInscripcionPorId(idInscripcion, inscripcionActualizada);
         cursosInscritos.actualizar(inscripcionActualizada);
         cursosInscritos.guardarInformacion(archivoInscripciones);
@@ -81,7 +81,6 @@ public class FormulariosInscripcion {
 
 
 
-                // Cerrar el formulario
                 formularioFrame.dispose();
             }
         });
@@ -128,17 +127,17 @@ public class FormulariosInscripcion {
                     JOptionPane.showMessageDialog(formularioFrame, ex.getMessage());
                 }
 
-                // Cerrar el formulario
+
                 formularioFrame.dispose();
             }
         });
 
         formularioFrame.add(idLabel);
         formularioFrame.add(idField);
-        formularioFrame.add(new JLabel());  // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(eliminarButton);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
     public static void mostrarTablaTodasInscripciones() {
@@ -178,7 +177,7 @@ public class FormulariosInscripcion {
         inputPanel.add(idField);
         inputPanel.add(verButton);
 
-        // Definir las columnas de la tabla
+
         String[] columnNames = {"ID", "AÑO", "SEMESTRE", "CURSO_ID", "ESTUDIANTE_ID"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
@@ -192,7 +191,7 @@ public class FormulariosInscripcion {
                     Inscripcion inscripcion = InscripcionRepo.obtenerInscripcionByID(idInscripcion);
 
                     if (inscripcion != null) {
-                        // Limpiar la tabla antes de agregar nuevos datos
+
                         tableModel.setRowCount(0);
 
                         Object[] rowData = {
@@ -239,14 +238,13 @@ public class FormulariosInscripcion {
 
         JButton actualizarButton = new JButton("Actualizar");
 
-        // Deshabilitar los campos hasta que se busque una inscripción
+
         idCursoField.setEnabled(false);
         añoField.setEnabled(false);
         semestreField.setEnabled(false);
         estudianteIdField.setEnabled(false);
         actualizarButton.setEnabled(false);
 
-        // Acción del botón Buscar
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -254,7 +252,6 @@ public class FormulariosInscripcion {
             }
         });
 
-        // Acción del botón Actualizar
         actualizarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -285,7 +282,7 @@ public class FormulariosInscripcion {
 
         formularioFrame.add(idLabel);
         formularioFrame.add(idField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(buscarButton);
         formularioFrame.add(idCursoLabel);
         formularioFrame.add(idCursoField);
@@ -295,7 +292,7 @@ public class FormulariosInscripcion {
         formularioFrame.add(semestreField);
         formularioFrame.add(estudianteIdLabel);
         formularioFrame.add(estudianteIdField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(actualizarButton);
 
         formularioFrame.setVisible(true);
@@ -313,13 +310,13 @@ public class FormulariosInscripcion {
             Inscripcion inscripcion = InscripcionRepo.obtenerInscripcionByID(idInscripcion);
 
             if (inscripcion != null) {
-                // Cargar los datos en los campos
+
                 idCursoField.setText(String.valueOf(inscripcion.getCurso().getID()));
                 añoField.setText(String.valueOf(inscripcion.getAño()));
                 semestreField.setText(String.valueOf(inscripcion.getSemestre()));
                 estudianteIdField.setText(String.valueOf(inscripcion.getEstudiante().getID()));
 
-                // Habilitar los campos de edición y el botón Actualizar
+
                 idCursoField.setEnabled(true);
                 añoField.setEnabled(true);
                 semestreField.setEnabled(true);

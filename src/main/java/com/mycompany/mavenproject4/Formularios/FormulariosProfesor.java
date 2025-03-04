@@ -18,7 +18,7 @@ public class FormulariosProfesor {
         JFrame formularioFrame = new JFrame("Formulario Crear Profesor");
         formularioFrame.setSize(400, 300);
         formularioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        formularioFrame.setLayout(new GridLayout(5, 2)); // Ajustar para incluir nuevo campo
+        formularioFrame.setLayout(new GridLayout(5, 2));
 
         JLabel nombresLabel = new JLabel("Nombres:");
         JTextField nombresField = new JTextField();
@@ -43,7 +43,7 @@ public class FormulariosProfesor {
                 repositorioProfesor.crearProfesor(nuevoProfesor);
                 JOptionPane.showMessageDialog(formularioFrame,"Profesor Creado");
 
-                // Cerrar el formulario
+
                 formularioFrame.dispose();
             }
         });
@@ -56,10 +56,10 @@ public class FormulariosProfesor {
         formularioFrame.add(emailField);
         formularioFrame.add(tipoContratoLabel);
         formularioFrame.add(tipoContratoField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(crearButton);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
     public static void mostrarTablaTodosProfesores() {
@@ -110,17 +110,17 @@ public class FormulariosProfesor {
                     JOptionPane.showMessageDialog(formularioFrame,"Id invalido");
                 }
 
-                // Cerrar el formulario
+
                 formularioFrame.dispose();
             }
         });
 
         formularioFrame.add(idProfesorLabel);
         formularioFrame.add(idProfesorField);
-        formularioFrame.add(new JLabel());  // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(eliminarButton);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
 
@@ -139,7 +139,7 @@ public class FormulariosProfesor {
         inputPanel.add(idField);
         inputPanel.add(verButton);
 
-        // Definir las columnas de la tabla
+
         String[] columnNames = {"ID", "APELLIDOS", "EMAIL", "NOMBRES", "TIPOCONTRATO"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
@@ -153,7 +153,7 @@ public class FormulariosProfesor {
                     Profesor profesor = repositorioProfesor.obtenerProfesorByID(idPersona);
 
                     if (profesor != null) {
-                        // Limpiar la tabla antes de agregar nuevos datos
+
                         tableModel.setRowCount(0);
 
                         Object[] rowData = {
@@ -199,14 +199,12 @@ public class FormulariosProfesor {
 
         JButton actualizarButton = new JButton("Actualizar");
 
-        // Deshabilitar campos hasta que se busque un profesor
         nombresField.setEnabled(false);
         apellidosField.setEnabled(false);
         emailField.setEnabled(false);
         tipoContratoField.setEnabled(false);
         actualizarButton.setEnabled(false);
 
-        // Acción del botón Buscar
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -214,7 +212,6 @@ public class FormulariosProfesor {
             }
         });
 
-        // Acción del botón Actualizar
         actualizarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -240,7 +237,7 @@ public class FormulariosProfesor {
 
         formularioFrame.add(idProfesorLabel);
         formularioFrame.add(idProfesorField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(buscarButton);
         formularioFrame.add(nombresLabel);
         formularioFrame.add(nombresField);
@@ -250,13 +247,12 @@ public class FormulariosProfesor {
         formularioFrame.add(emailField);
         formularioFrame.add(tipoContratoLabel);
         formularioFrame.add(tipoContratoField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(actualizarButton);
 
         formularioFrame.setVisible(true);
     }
 
-    // Función para buscar profesor por ID
     public static void botonBuscarProfesor_Actualizar(JTextField idProfesorField, JTextField nombresField, JTextField apellidosField,
                                            JTextField emailField, JTextField tipoContratoField,
                                            JButton actualizarButton, JFrame frame) {
@@ -271,18 +267,15 @@ public class FormulariosProfesor {
             Profesor profesor = repositorioProfesor.obtenerProfesorByID(idPersona);
 
             if (profesor != null) {
-                // Cargar datos en los campos
                 nombresField.setText(profesor.getNombres());
                 apellidosField.setText(profesor.getApellidos());
                 emailField.setText(profesor.getEmail());
                 tipoContratoField.setText(profesor.getTipoContrato());
 
-                // Bloquear campos no editables
                 nombresField.setEnabled(true);
                 apellidosField.setEnabled(true);
                 emailField.setEnabled(true);
 
-                // Habilitar solo el campo modificable y el botón de actualizar
                 tipoContratoField.setEnabled(true);
                 actualizarButton.setEnabled(true);
             } else {

@@ -1,64 +1,124 @@
 package com.mycompany.mavenproject4.repositorios;
 
 import com.mycompany.mavenproject4.modelos.Curso;
-import com.mycompany.mavenproject4.modelos.Persona;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import com.mycompany.mavenproject4.modelos.Programa;
+import com.mycompany.mavenproject4.entityManager.DatabaseManager;
 
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CursoRepo {
-    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("db");
+    private static ProgramaRepo programaRepo = new ProgramaRepo();
 
     public List<Curso> obtenerTodosCursos() {
-        EntityManager em = emf.createEntityManager();
-        List<Curso> cursos = em.createQuery("SELECT c FROM Curso c", Curso.class).getResultList();
-        em.close();
+        List<Curso> cursos = new ArrayList<>();
+        String sql = "SELECT * FROM curso";
+
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                cursos.add(mapearCurso(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return cursos;
     }
 
-    public Curso obtenerCursoByID(Long id) {
-        EntityManager em = emf.createEntityManager();
-        Curso curso = em.find(Curso.class, id);
-        em.close();
+    public static Curso obtenerCursoByID(Long id) {
+        String sql = "SELECT * FROM curso WHERE id = ?";
+        Curso curso = null;
+
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    curso = mapearCurso(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return curso;
     }
 
     public Curso crearCurso(Curso curso) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        em.persist(curso);
-        em.getTransaction().commit();
-        em.close();
+        String sql = "INSERT INTO curso (programa_id, activo) VALUES (?, ?)";
+
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            statement.setLong(1, curso.getPrograma().getID());
+            statement.setBoolean(2, curso.getActivo());
+
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        curso.setID(generatedKeys.getLong(1));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
         return curso;
     }
 
     public static Curso actualizarCursoPorId(Long id, Curso nuevoCurso) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Curso cursoExistente = em.find(Curso.class, id);
-        if (cursoExistente != null) {
-            cursoExistente.setPrograma(nuevoCurso.getPrograma());
-            cursoExistente.setActivo(nuevoCurso.getActivo());
-            em.merge(cursoExistente);
+        String sql = "UPDATE curso SET programa_id = ?, activo = ? WHERE id = ?";
+
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, nuevoCurso.getPrograma().getID());
+            statement.setBoolean(2, nuevoCurso.getActivo());
+            statement.setLong(3, id);
+
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows > 0) {
+                return obtenerCursoByID(id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        em.getTransaction().commit();
-        em.close();
-        return cursoExistente;
+
+        return null;
     }
 
     public boolean eliminarCurso(Long id) {
+        String sql = "DELETE FROM curso WHERE id = ?";
         boolean registroEliminado = false;
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Curso curso = em.find(Curso.class, id);
-        if (curso != null) {
-            em.remove(curso);
-            registroEliminado = true;
+
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, id);
+            registroEliminado = statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        em.getTransaction().commit();
-        em.close();
+
         return registroEliminado;
+    }
+
+    private static Curso mapearCurso(ResultSet resultSet) throws SQLException {
+        Long programaId = resultSet.getLong("programa_id");
+        Programa programa = programaRepo.obtenerProgramaByID(programaId);
+
+        return new Curso(
+                resultSet.getLong("id"),
+                programa,
+                resultSet.getBoolean("activo")
+        );
     }
 }

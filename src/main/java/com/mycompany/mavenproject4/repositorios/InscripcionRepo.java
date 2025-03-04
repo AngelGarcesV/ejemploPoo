@@ -1,66 +1,119 @@
 package com.mycompany.mavenproject4.repositorios;
 
+import com.mycompany.mavenproject4.modelos.Curso;
+import com.mycompany.mavenproject4.modelos.Estudiante;
 import com.mycompany.mavenproject4.modelos.Inscripcion;
-import com.mycompany.mavenproject4.modelos.Persona;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-
+import com.mycompany.mavenproject4.entityManager.DatabaseManager;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InscripcionRepo {
-    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("db");
+    static CursoRepo repositorioCurso = new CursoRepo();
+    static EstudianteRepo repositorioEstudiante = new EstudianteRepo();
 
     public List<Inscripcion> obtenerTodasInscripciones() {
-        EntityManager em = emf.createEntityManager();
-        List<Inscripcion> inscripciones = em.createQuery("SELECT i FROM Inscripcion i", Inscripcion.class).getResultList();
-        em.close();
+        List<Inscripcion> inscripciones = new ArrayList<>();
+        String sql = "SELECT id, curso_id, año, semestre, estudiante_id FROM Inscripcion";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Curso curso = repositorioCurso.obtenerCursoByID(rs.getLong("curso_id"));
+                Estudiante estudiante = repositorioEstudiante.obtenerEstudianteByID(rs.getLong("estudiante_id"));
+
+                Inscripcion inscripcion = new Inscripcion(
+                        rs.getLong("id"),
+                        curso,
+                        rs.getInt("año"),
+                        rs.getInt("semestre"),
+                        estudiante
+                );
+                inscripciones.add(inscripcion);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return inscripciones;
     }
 
+
     public static Inscripcion obtenerInscripcionByID(Long id) {
-        EntityManager em = emf.createEntityManager();
-        Inscripcion inscripcion = em.find(Inscripcion.class, id);
-        em.close();
-        return inscripcion;
+        String sql = "SELECT id, curso_id, año, semestre, estudiante_id FROM Inscripcion WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Estudiante estudiante = repositorioEstudiante.obtenerEstudianteByID(rs.getLong("estudiante_id"));
+                    Curso curso = CursoRepo.obtenerCursoByID(rs.getLong("curso_id"));
+
+                    return new Inscripcion(
+                            rs.getLong("id"),
+                            curso,
+                            rs.getInt("año"),
+                            rs.getInt("semestre"),
+                            estudiante
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
+
     public Inscripcion crearInscripcion(Inscripcion inscripcion) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        em.persist(inscripcion);
-        em.getTransaction().commit();
-        em.close();
+        String sql = "INSERT INTO Inscripcion (curso_id, año, semestre, estudiante_id) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setLong(1, inscripcion.getCurso().getID());
+            stmt.setInt(2, inscripcion.getAño());
+            stmt.setInt(3, inscripcion.getSemestre());
+            stmt.setLong(4, inscripcion.getEstudiante().getID());
+            stmt.executeUpdate();
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    inscripcion.setId(generatedKeys.getLong(1));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return inscripcion;
     }
 
     public static Inscripcion actualizarInscripcionPorId(Long id, Inscripcion nuevaInscripcion) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Inscripcion inscripcionExistente = em.find(Inscripcion.class, id);
-        if (inscripcionExistente != null) {
-            inscripcionExistente.setCurso(nuevaInscripcion.getCurso());
-            inscripcionExistente.setAño(nuevaInscripcion.getAño());
-            inscripcionExistente.setSemestre(nuevaInscripcion.getSemestre());
-            inscripcionExistente.setEstudiante(nuevaInscripcion.getEstudiante());
-            em.merge(inscripcionExistente);
+        String sql = "UPDATE Inscripcion SET curso_id = ?, año = ?, semestre = ?, estudiante_id = ? WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, nuevaInscripcion.getCurso().getID());
+            stmt.setInt(2, nuevaInscripcion.getAño());
+            stmt.setInt(3, nuevaInscripcion.getSemestre());
+            stmt.setLong(4, nuevaInscripcion.getEstudiante().getID());
+            stmt.setLong(5, id);
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                return nuevaInscripcion;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        em.getTransaction().commit();
-        em.close();
-        return inscripcionExistente;
+        return null;
     }
 
     public boolean eliminarInscripcion(Long id) {
-        boolean registroEliminado = false;
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Inscripcion inscripcion = em.find(Inscripcion.class, id);
-        if (inscripcion != null) {
-            em.remove(inscripcion);
-            registroEliminado = true;
+        String sql = "DELETE FROM Inscripcion WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        em.getTransaction().commit();
-        em.close();
-        return registroEliminado;
+        return false;
     }
 }

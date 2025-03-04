@@ -19,10 +19,8 @@ public class Mavenproject4  {
             frame.setSize(1200, 720);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            // Crear un JTabbedPane para las pestañas
             JTabbedPane tabbedPane = new JTabbedPane();
 
-            // Crear los paneles de cada pestaña
             JPanel panelPersona = crearPanelBotones("Menú Persona");
             JPanel panelEstudiante = crearPanelBotones("Menú Estudiante");
             JPanel panelProfesor = crearPanelBotones("Menú Profesor");
@@ -32,7 +30,6 @@ public class Mavenproject4  {
             JPanel panelCursoProfesor = crearPanelBotones("Menú Curso Profesor");
             JPanel panelInscripcionCursos = crearPanelBotones("Menú Cursos Inscritos");
 
-            // Añadir los paneles al JTabbedPane
             tabbedPane.addTab("PERSONA", panelPersona);
             tabbedPane.addTab("ESTUDIANTE", panelEstudiante);
             tabbedPane.addTab("PROFESOR", panelProfesor);
@@ -42,10 +39,8 @@ public class Mavenproject4  {
             tabbedPane.addTab("CURSO PROFESOR", panelCursoProfesor);
             tabbedPane.addTab("CURSOS INSCRITOS", panelInscripcionCursos);
 
-            // Añadir el JTabbedPane al frame
             frame.add(tabbedPane, BorderLayout.CENTER);
 
-            // Mostrar la ventana
             frame.setVisible(true);
         }
 
@@ -55,14 +50,12 @@ public class Mavenproject4  {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Título de la pestaña
         JLabel label = new JLabel(menu, JLabel.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         panel.add(label, gbc);
         gbc.gridwidth = 1;
 
-        // Crear los botones
         String[] buttonLabels = { "CREAR", "VER TODOS", "VER POR ID", "ACTUALIZAR", "ELIMINAR" };
         for (String labelText : buttonLabels) {
             JButton button = new JButton(labelText);
@@ -71,7 +64,6 @@ public class Mavenproject4  {
             gbc.gridy = GridBagConstraints.RELATIVE;
             panel.add(button, gbc);
 
-            // Asignar acción según el menú y el botón
             asignarAccionBoton(labelText, menu, button);
         }
 

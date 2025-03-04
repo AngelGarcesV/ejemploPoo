@@ -1,64 +1,124 @@
 package com.mycompany.mavenproject4.repositorios;
 
+import com.mycompany.mavenproject4.entityManager.DatabaseManager;
 import com.mycompany.mavenproject4.modelos.Persona;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class personaRepo {
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("db");
 
     public List<Persona> obtenerTodosPersona() {
-        EntityManager em = emf.createEntityManager();
-        List<Persona> personas = em.createQuery("SELECT p FROM Persona p", Persona.class).getResultList();
-        em.close();
+        List<Persona> personas = new ArrayList<>();
+        String sql = "SELECT * FROM persona";
+
+        try (Connection connection = DatabaseManager.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                Persona persona = new Persona(
+                        resultSet.getLong("id"),
+                        resultSet.getString("nombres"),
+                        resultSet.getString("apellidos"),
+                        resultSet.getString("email")
+                );
+                personas.add(persona);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return personas;
     }
 
     public Persona obtenerPersonaByID(Long id) {
-        EntityManager em = emf.createEntityManager();
-        Persona persona = em.find(Persona.class, id);
-        em.close();
+        String sql = "SELECT * FROM persona WHERE id = ?";
+        Persona persona = null;
+
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                persona = new Persona(
+                        resultSet.getLong("id"),
+                        resultSet.getString("nombres"),
+                        resultSet.getString("apellidos"),
+                        resultSet.getString("email")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return persona;
     }
 
     public Persona crearPersona(Persona persona) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        em.persist(persona);
-        em.getTransaction().commit();
-        em.close();
+        String sql = "INSERT INTO persona (nombres, apellidos, email) VALUES (?, ?, ?)";
+
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            statement.setString(1, persona.getNombres());
+            statement.setString(2, persona.getApellidos());
+            statement.setString(3, persona.getEmail());
+
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        persona.setID(generatedKeys.getLong(1));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
         return persona;
     }
+
+
+
+
     public boolean eliminarPersona(Long id) {
+        String sql = "DELETE FROM persona WHERE id = ?";
         boolean registroEliminado = false;
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Persona persona = em.find(Persona.class, id);
-        if (persona != null) {
-            em.remove(persona);
-            registroEliminado = true;
+
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, id);
+            int affectedRows = statement.executeUpdate();
+            registroEliminado = affectedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        em.getTransaction().commit();
-        em.close();
         return registroEliminado;
     }
 
+    public boolean actualizarPersonaPorId(Long id, Persona nuevaPersona) {
+        String sql = "UPDATE persona SET nombres = ?, apellidos = ?, email = ? WHERE id = ?";
+        boolean registroActualizado = false;
 
-    public Persona actualizarPersonaPorId(Long id, Persona nuevaPersona) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Persona personaExistente = em.find(Persona.class, id);
-        if (personaExistente != null) {
-            personaExistente.setNombres(nuevaPersona.getNombres());
-            personaExistente.setApellidos(nuevaPersona.getApellidos());
-            personaExistente.setEmail(nuevaPersona.getEmail());
-            em.merge(personaExistente);
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, nuevaPersona.getNombres());
+            statement.setString(2, nuevaPersona.getApellidos());
+            statement.setString(3, nuevaPersona.getEmail());
+            statement.setLong(4, id);
+
+            int affectedRows = statement.executeUpdate();
+            registroActualizado = affectedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        em.getTransaction().commit();
-        em.close();
-        return personaExistente;
+        return registroActualizado;
     }
 }

@@ -59,10 +59,10 @@ public class FormulariosFacultad {
         formularioFrame.add(nombreField);
         formularioFrame.add(idDecanoLabel);
         formularioFrame.add(idDecanoField);
-        formularioFrame.add(new JLabel());  // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(crearButton);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
 
@@ -89,17 +89,17 @@ public class FormulariosFacultad {
                     JOptionPane.showMessageDialog(formularioFrame, "No se ha podido eliminar la facultad");
                 }
 
-                // Cerrar el formulario
+
                 formularioFrame.dispose();
             }
         });
 
         formularioFrame.add(idLabel);
         formularioFrame.add(idField);
-        formularioFrame.add(new JLabel());  // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(eliminarButton);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
 
@@ -109,7 +109,7 @@ public class FormulariosFacultad {
         formularioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         formularioFrame.setLayout(new BorderLayout());
 
-        // Panel para ingresar el ID
+
         JPanel inputPanel = new JPanel(new GridLayout(1, 2));
         JLabel idLabel = new JLabel("ID:");
         JTextField idField = new JTextField();
@@ -119,7 +119,7 @@ public class FormulariosFacultad {
         inputPanel.add(idField);
         inputPanel.add(verButton);
 
-        // Crear la tabla para mostrar los datos de la facultad
+
         String[] columnNames = {"ID", "Nombre", "ID Decano"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
@@ -133,14 +133,14 @@ public class FormulariosFacultad {
                     Long id_Facultad = Long.parseLong(id);
                     Facultad infoFacultad = repositorioFacultad.obtenerFacultadByID(id_Facultad);
 
-                    // Limpiar la tabla antes de agregar nuevos datos
+
                     tableModel.setRowCount(0);
 
                     if (infoFacultad != null) {
                         Object[] rowData = {
                                 infoFacultad.getID(),
                                 infoFacultad.getNombre(),
-                                infoFacultad.getDecano().getID()  // Obtener ID del Decano
+                                infoFacultad.getDecano().getID()
                         };
                         tableModel.addRow(rowData);
                     } else {
@@ -154,11 +154,11 @@ public class FormulariosFacultad {
             }
         });
 
-        // Agregar componentes al formulario
+
         formularioFrame.add(inputPanel, BorderLayout.NORTH);
         formularioFrame.add(scrollPane, BorderLayout.CENTER);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
 
@@ -199,12 +199,12 @@ public class FormulariosFacultad {
         JTextField idDecanoField = new JTextField();
         JButton actualizarButton = new JButton("Actualizar");
 
-        // Deshabilitar los campos hasta que se busque una facultad
+
         nombreField.setEnabled(false);
         idDecanoField.setEnabled(false);
         actualizarButton.setEnabled(false);
 
-        // Acción del botón Buscar
+
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -212,7 +212,7 @@ public class FormulariosFacultad {
             }
         });
 
-        // Acción del botón Actualizar
+
         actualizarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -245,13 +245,13 @@ public class FormulariosFacultad {
 
         formularioFrame.add(idLabel);
         formularioFrame.add(idField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(buscarButton);
         formularioFrame.add(nombreLabel);
         formularioFrame.add(nombreField);
         formularioFrame.add(idDecanoLabel);
         formularioFrame.add(idDecanoField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(actualizarButton);
 
         formularioFrame.setVisible(true);
@@ -269,11 +269,11 @@ public class FormulariosFacultad {
             Facultad facultad = FacultadRepo.obtenerFacultadByID(idFacultad);
 
             if (facultad != null) {
-                // Cargar datos en los campos
+
                 nombreField.setText(facultad.getNombre());
                 idDecanoField.setText(String.valueOf(facultad.getDecano().getID()));
 
-                // Habilitar los campos de edición y el botón Actualizar
+
                 nombreField.setEnabled(true);
                 idDecanoField.setEnabled(true);
                 actualizarButton.setEnabled(true);

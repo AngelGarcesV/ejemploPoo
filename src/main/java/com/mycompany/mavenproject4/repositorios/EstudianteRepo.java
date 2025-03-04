@@ -1,69 +1,136 @@
 package com.mycompany.mavenproject4.repositorios;
 
 import com.mycompany.mavenproject4.modelos.Estudiante;
-import com.mycompany.mavenproject4.modelos.Estudiante;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import com.mycompany.mavenproject4.modelos.Programa;
+import com.mycompany.mavenproject4.entityManager.DatabaseManager;
 
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EstudianteRepo {
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("db");
+    private static final ProgramaRepo programaRepo = new ProgramaRepo();
 
     public List<Estudiante> obtenerTodosEstudiantes() {
-        EntityManager em = emf.createEntityManager();
-        List<Estudiante> estudiantes = em.createQuery("SELECT e FROM Estudiante e", Estudiante.class).getResultList();
-        em.close();
+        List<Estudiante> estudiantes = new ArrayList<>();
+        String sql = "SELECT id, nombres, apellidos, email, codigo, programa_id, activo, promedio FROM Estudiante";
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Programa programa = programaRepo.obtenerProgramaByID(rs.getLong("programa_id"));
+
+                Estudiante estudiante = new Estudiante(
+                        rs.getDouble("codigo"),
+                        programa,
+                        rs.getBoolean("activo"),
+                        rs.getDouble("promedio"),
+                        rs.getLong("id"),
+                        rs.getString("nombres"),
+                        rs.getString("apellidos"),
+                        rs.getString("email")
+                );
+                estudiantes.add(estudiante);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return estudiantes;
     }
 
     public Estudiante obtenerEstudianteByID(Long id) {
-        EntityManager em = emf.createEntityManager();
-        Estudiante estudiante = em.find(Estudiante.class, id);
-        em.close();
-        return estudiante;
+        String sql = "SELECT id, nombres, apellidos, email, codigo, programa_id, activo, promedio FROM Estudiante WHERE id = ?";
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Programa programa = programaRepo.obtenerProgramaByID(rs.getLong("programa_id"));
+
+                    return new Estudiante(
+                            rs.getDouble("codigo"),
+                            programa,
+                            rs.getBoolean("activo"),
+                            rs.getDouble("promedio"),
+                            rs.getLong("id"),
+                            rs.getString("nombres"),
+                            rs.getString("apellidos"),
+                            rs.getString("email")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public Estudiante crearEstudiante(Estudiante estudiante) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        em.persist(estudiante);
-        em.getTransaction().commit();
-        em.close();
+        String sql = "INSERT INTO Estudiante (nombres, apellidos, email, codigo, programa_id, activo, promedio) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, estudiante.getNombres());
+            stmt.setString(2, estudiante.getApellidos());
+            stmt.setString(3, estudiante.getEmail());
+            stmt.setDouble(4, estudiante.getCodigo());
+            stmt.setLong(5, estudiante.getPrograma().getID());
+            stmt.setBoolean(6, estudiante.getActivo());
+            stmt.setDouble(7, estudiante.getPromedio());
+
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        estudiante.setID(generatedKeys.getLong(1));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return estudiante;
     }
 
     public Estudiante actualizarEstudiantePorId(Long id, Estudiante nuevoEstudiante) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Estudiante estudianteExistente = em.find(Estudiante.class, id);
-        if (estudianteExistente != null) {
-            estudianteExistente.setNombres(nuevoEstudiante.getNombres());
-            estudianteExistente.setApellidos(nuevoEstudiante.getApellidos());
-            estudianteExistente.setEmail(nuevoEstudiante.getEmail());
-            estudianteExistente.setCodigo(nuevoEstudiante.getCodigo());
-            estudianteExistente.setPrograma(nuevoEstudiante.getPrograma());
-            estudianteExistente.setActivo(nuevoEstudiante.getActivo());
-            estudianteExistente.setPromedio(nuevoEstudiante.getPromedio());
-            em.merge(estudianteExistente);
+        String sql = "UPDATE Estudiante SET nombres = ?, apellidos = ?, email = ?, codigo = ?, programa_id = ?, activo = ?, promedio = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, nuevoEstudiante.getNombres());
+            stmt.setString(2, nuevoEstudiante.getApellidos());
+            stmt.setString(3, nuevoEstudiante.getEmail());
+            stmt.setDouble(4, nuevoEstudiante.getCodigo());
+            stmt.setLong(5, nuevoEstudiante.getPrograma().getID());
+            stmt.setBoolean(6, nuevoEstudiante.getActivo());
+            stmt.setDouble(7, nuevoEstudiante.getPromedio());
+            stmt.setLong(8, id);
+
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                return obtenerEstudianteByID(id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        em.getTransaction().commit();
-        em.close();
-        return estudianteExistente;
+        return null;
     }
 
     public boolean eliminarEstudiante(Long id) {
-        boolean registroEliminado = false;
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        Estudiante estudiante = em.find(Estudiante.class, id);
-        if (estudiante != null) {
-            em.remove(estudiante);
-            registroEliminado = true;
+        String sql = "DELETE FROM Estudiante WHERE id = ?";
+        boolean eliminado = false;
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            eliminado = stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        em.getTransaction().commit();
-        em.close();
-        return registroEliminado;
+        return eliminado;
     }
 }

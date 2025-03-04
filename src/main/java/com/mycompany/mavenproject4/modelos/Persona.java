@@ -12,18 +12,10 @@ import java.io.Serializable;
  *
  * @author Estudiante_MCA
  */
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@DiscriminatorColumn(name = "tipo_persona", discriminatorType = DiscriminatorType.STRING)
 public class Persona implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long ID;
-    @Column(name = "nombres")
     private String nombres;
-    @Column (name = "apellidos")
     private String apellidos;
-    @Column(name = "email")
     private String email;
 
     public Persona(Long ID, String nombres, String apellidos, String email) {
@@ -32,7 +24,12 @@ public class Persona implements Serializable {
         this.apellidos = apellidos;
         this.email = email;
     }
-
+    public Persona(String nombres, String apellidos, String email) {
+        this.ID = ID;
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.email = email;
+    }
     public Persona() {
     }
 

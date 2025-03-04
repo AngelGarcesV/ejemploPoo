@@ -20,7 +20,7 @@ public class FormulariosEstudiante {
         JFrame formularioFrame = new JFrame("Formulario Crear Estudiante");
         formularioFrame.setSize(400, 350);
         formularioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        formularioFrame.setLayout(new GridLayout(8, 2)); // Ajuste de filas
+        formularioFrame.setLayout(new GridLayout(8, 2));
 
         JLabel nombresLabel = new JLabel("Nombres:");
         JTextField nombresField = new JTextField();
@@ -67,7 +67,7 @@ public class FormulariosEstudiante {
 
 
 
-                // Cerrar el formulario
+
                 formularioFrame.dispose();
             }
         });
@@ -86,10 +86,10 @@ public class FormulariosEstudiante {
         formularioFrame.add(activoCheckBox);
         formularioFrame.add(promedioLabel);
         formularioFrame.add(promedioField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(crearButton);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
 
@@ -118,17 +118,17 @@ public class FormulariosEstudiante {
                     JOptionPane.showMessageDialog(null, "Error ocasionado por id");
                 }
 
-                // Cerrar el formulario
+
                 formularioFrame.dispose();
             }
         });
 
         formularioFrame.add(idPersonaLabel);
         formularioFrame.add(idPersonaField);
-        formularioFrame.add(new JLabel());  // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(eliminarButton);
 
-        // Mostrar el formulario
+
         formularioFrame.setVisible(true);
     }
 
@@ -147,7 +147,7 @@ public class FormulariosEstudiante {
         inputPanel.add(idField);
         inputPanel.add(verButton);
 
-        // Definir las columnas de la tabla
+
         String[] columnNames = {"ID", "APELLIDOS", "EMAIL", "NOMBRES", "ACTIVO", "CODIGO", "PROMEDIO", "PROGRAMA_ID"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
@@ -161,7 +161,7 @@ public class FormulariosEstudiante {
                     Estudiante estudiante = repositorioEstudiante.obtenerEstudianteByID(idPersona);
 
                     if (estudiante != null) {
-                        // Limpiar la tabla antes de agregar nuevos datos
+
                         tableModel.setRowCount(0);
 
                         Object[] rowData = {
@@ -195,7 +195,7 @@ public class FormulariosEstudiante {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        // Agregar todas las columnas faltantes
+
         String[] columnNames = {"ID", "Apellidos", "Nombres", "Email", "Activo", "Código", "Promedio", "Programa_ID"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         JTable table = new JTable(tableModel);
@@ -207,10 +207,10 @@ public class FormulariosEstudiante {
                     estudiante.getApellidos(),
                     estudiante.getNombres(),
                     estudiante.getEmail(),
-                    estudiante.getActivo(),  // Asegúrate de que haya un método get para esto
+                    estudiante.getActivo(),
                     estudiante.getCodigo(),
                     estudiante.getPromedio(),
-                    estudiante.getPrograma().getID()  // Si es un objeto Programa, usa estudiante.getPrograma().getID()
+                    estudiante.getPrograma().getID()
             };
             tableModel.addRow(rowData);
         }
@@ -247,7 +247,7 @@ public class FormulariosEstudiante {
 
         JButton actualizarButton = new JButton("Actualizar");
 
-        // Deshabilitar campos hasta que se busque un estudiante
+
         nombresField.setEnabled(false);
         apellidosField.setEnabled(false);
         emailField.setEnabled(false);
@@ -257,7 +257,7 @@ public class FormulariosEstudiante {
         promedioField.setEnabled(false);
         actualizarButton.setEnabled(false);
 
-        // Acción del botón Buscar
+
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -266,7 +266,7 @@ public class FormulariosEstudiante {
             }
         });
 
-        // Acción del botón Actualizar
+
         actualizarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -302,7 +302,7 @@ public class FormulariosEstudiante {
 
         formularioFrame.add(idPersonaLabel);
         formularioFrame.add(idPersonaField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(buscarButton);
         formularioFrame.add(nombresLabel);
         formularioFrame.add(nombresField);
@@ -318,13 +318,13 @@ public class FormulariosEstudiante {
         formularioFrame.add(activoCheckBox);
         formularioFrame.add(promedioLabel);
         formularioFrame.add(promedioField);
-        formularioFrame.add(new JLabel()); // Espacio vacío
+        formularioFrame.add(new JLabel());
         formularioFrame.add(actualizarButton);
 
         formularioFrame.setVisible(true);
     }
 
-    // Función separada para buscar estudiante por ID
+
     public static void buscarEstudiantePorId(JTextField idPersonaField, JTextField nombresField, JTextField apellidosField,
                                              JTextField emailField, JTextField codigoField, JTextField programaField,
                                              JCheckBox activoCheckBox, JTextField promedioField,
@@ -340,7 +340,7 @@ public class FormulariosEstudiante {
             Estudiante estudiante = repositorioEstudiante.obtenerEstudianteByID(idPersona);
 
             if (estudiante != null) {
-                // Cargar datos en los campos
+
                 nombresField.setText(estudiante.getNombres());
                 apellidosField.setText(estudiante.getApellidos());
                 emailField.setText(estudiante.getEmail());
@@ -349,7 +349,7 @@ public class FormulariosEstudiante {
                 activoCheckBox.setSelected(estudiante.getActivo());
                 promedioField.setText(String.valueOf(estudiante.getPromedio()));
 
-                // Habilitar los campos de edición y el botón Actualizar
+
                 nombresField.setEnabled(true);
                 apellidosField.setEnabled(true);
                 emailField.setEnabled(true);
