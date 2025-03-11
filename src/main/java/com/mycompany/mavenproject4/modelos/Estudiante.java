@@ -19,6 +19,10 @@ public class Estudiante extends Persona implements Serializable {
     private Double promedio;
 
 
+    public boolean isValid() {
+        return super.isValid() && this.getCodigo() > 0 && programa != null && activo != null && promedio >= 0.0 && promedio <= 5.0;
+    }
+
     public double getCodigo() {
         return codigo;
     }

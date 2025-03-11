@@ -1,4 +1,4 @@
-package com.mycompany.mavenproject4.Controladores;
+package com.mycompany.mavenproject4.ControladoresArchivosBinarios;
 
 import com.mycompany.mavenproject4.modelos.CursoProfesor;
 import com.mycompany.mavenproject4.modelos.interfaces.Servicios;

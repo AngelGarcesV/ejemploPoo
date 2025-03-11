@@ -22,6 +22,10 @@ public class Curso implements Serializable {
 
     }
 
+    public boolean isValid(){
+        return programa != null && activo != null;
+    }
+
     public Programa getPrograma() {
         return programa;
     }

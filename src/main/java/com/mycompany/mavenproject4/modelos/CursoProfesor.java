@@ -27,6 +27,9 @@ public class CursoProfesor implements Serializable {
         this.semestre = semestre;
         this.curso = curso;
     }
+    public Boolean isValid(){
+        return this.profesor != null && this.curso != null && this.año >= 1000 && this.año <= 9999 && this.semestre > 0;
+    }
 
     public CursoProfesor() {
 

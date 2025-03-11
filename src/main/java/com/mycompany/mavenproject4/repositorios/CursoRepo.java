@@ -49,7 +49,7 @@ public class CursoRepo {
         return curso;
     }
 
-    public Curso crearCurso(Curso curso) {
+    public static Curso crearCurso(Curso curso) {
         String sql = "INSERT INTO curso (programa_id, activo) VALUES (?, ?)";
 
         try (Connection connection = DatabaseManager.getConnection();
@@ -74,7 +74,7 @@ public class CursoRepo {
         return curso;
     }
 
-    public static Curso actualizarCursoPorId(Long id, Curso nuevoCurso) {
+    public static Curso actualizarCursoPorId(Curso nuevoCurso) {
         String sql = "UPDATE curso SET programa_id = ?, activo = ? WHERE id = ?";
 
         try (Connection connection = DatabaseManager.getConnection();
@@ -82,11 +82,11 @@ public class CursoRepo {
 
             statement.setLong(1, nuevoCurso.getPrograma().getID());
             statement.setBoolean(2, nuevoCurso.getActivo());
-            statement.setLong(3, id);
+            statement.setLong(3, nuevoCurso.getID());
 
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
-                return obtenerCursoByID(id);
+                return obtenerCursoByID(nuevoCurso.getID());
             }
         } catch (SQLException e) {
             e.printStackTrace();

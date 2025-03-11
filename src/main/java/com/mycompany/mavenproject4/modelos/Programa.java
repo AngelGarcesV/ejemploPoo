@@ -28,6 +28,10 @@ public class Programa implements Serializable {
         this.facultad = facultad;
     }
 
+    public boolean isValid(){
+        return this.nombre != null && this.duracion != null && this.registro != null;
+    }
+
     public Programa() {
 
     }

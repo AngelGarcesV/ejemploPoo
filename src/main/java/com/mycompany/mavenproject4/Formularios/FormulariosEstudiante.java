@@ -1,5 +1,7 @@
 package com.mycompany.mavenproject4.Formularios;
 
+import com.mycompany.mavenproject4.Controladores.EstudianteController;
+import com.mycompany.mavenproject4.Controladores.ProgramaController;
 import com.mycompany.mavenproject4.modelos.Estudiante;
 import com.mycompany.mavenproject4.modelos.Programa;
 import com.mycompany.mavenproject4.repositorios.EstudianteRepo;
@@ -13,8 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class FormulariosEstudiante {
-    static EstudianteRepo repositorioEstudiante = new EstudianteRepo();
-    static ProgramaRepo repositorioPrograma = new ProgramaRepo();
+    static EstudianteController estudianteController = new EstudianteController();
+    static ProgramaController programaController = new ProgramaController();
 
     public static void mostrarFormularioCrearEstudiante() {
         JFrame formularioFrame = new JFrame("Formulario Crear Estudiante");
@@ -53,10 +55,9 @@ public class FormulariosEstudiante {
                 try{
                     double codigoDouble = Double.parseDouble(codigoField.getText());
                     Long long_id_programa = Long.parseLong(id_programa);
-                    Programa infoPrograma = repositorioPrograma.obtenerProgramaByID(long_id_programa);
+                    Programa infoPrograma = programaController.getProgramaById(long_id_programa);
                     if(infoPrograma != null){
-                        Estudiante nuevoEstudiante = new Estudiante(codigoDouble,infoPrograma,activo,promedio,null,nombres,apellidos,email);
-                        repositorioEstudiante.crearEstudiante(nuevoEstudiante);
+                        estudianteController.createEstudiante(nombres, apellidos,email,codigoDouble,infoPrograma,activo,promedio);
                         JOptionPane.showMessageDialog(null, "Estudiante creado con exito");
                     }else{
                         JOptionPane.showMessageDialog(null, "No se encontro el programa");
@@ -108,7 +109,7 @@ public class FormulariosEstudiante {
             public void actionPerformed(ActionEvent e) {
                 try{
                     Long id_estudiante =Long.parseLong(idPersonaField.getText());
-                    boolean estudianteEliminado = repositorioEstudiante.eliminarEstudiante(id_estudiante);
+                    boolean estudianteEliminado = estudianteController.deleteEstudiante(id_estudiante);
                     if(estudianteEliminado){
                         JOptionPane.showMessageDialog(null, "Estudiante eliminado con exito");
                     }else{
@@ -158,7 +159,7 @@ public class FormulariosEstudiante {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Long idPersona = Long.parseLong(idField.getText());
-                    Estudiante estudiante = repositorioEstudiante.obtenerEstudianteByID(idPersona);
+                    Estudiante estudiante = estudianteController.getEstudianteById(idPersona);
 
                     if (estudiante != null) {
 
@@ -189,7 +190,7 @@ public class FormulariosEstudiante {
         formularioFrame.setVisible(true);
     }
     public static void mostrarTablaTodosEstudiantes() {
-        List<Estudiante> estudiantes = repositorioEstudiante.obtenerTodosEstudiantes();
+        List<Estudiante> estudiantes = estudianteController.getAllEstudiantes();
         JFrame frame = new JFrame("Lista de Estudiantes");
         frame.setSize(800, 400);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -280,10 +281,9 @@ public class FormulariosEstudiante {
                     boolean activo = activoCheckBox.isSelected();
                     double promedio = Double.parseDouble(promedioField.getText().trim());
 
-                    Programa infoPrograma = repositorioPrograma.obtenerProgramaByID(programa);
+                    Programa infoPrograma = programaController.getProgramaById(programa);
                     if(infoPrograma != null){
-                        Estudiante estudianteActualizado = new Estudiante(codigo,infoPrograma,activo,promedio,idPersona,nombres,apellidos,email);
-                        repositorioEstudiante.actualizarEstudiantePorId(idPersona, estudianteActualizado);
+                        estudianteController.updateEstudiante(idPersona, nombres, apellidos,email,codigo,infoPrograma,activo,promedio);
                     }else{
                         JOptionPane.showMessageDialog(null, "Programa no encontrado");
                     }
@@ -337,7 +337,7 @@ public class FormulariosEstudiante {
 
         try {
             long idPersona = Long.parseLong(idTexto);
-            Estudiante estudiante = repositorioEstudiante.obtenerEstudianteByID(idPersona);
+            Estudiante estudiante = estudianteController.getEstudianteById(idPersona);
 
             if (estudiante != null) {
 

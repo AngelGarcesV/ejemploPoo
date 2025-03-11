@@ -18,6 +18,10 @@ public class Persona implements Serializable {
     private String apellidos;
     private String email;
 
+    public boolean isValid(){
+        return nombres!=null && apellidos!=null && email!=null;
+    }
+
     public Persona(Long ID, String nombres, String apellidos, String email) {
         this.ID = ID;
         this.nombres = nombres;

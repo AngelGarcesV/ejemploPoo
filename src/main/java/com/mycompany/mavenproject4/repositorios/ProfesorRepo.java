@@ -97,7 +97,7 @@ public class ProfesorRepo {
         return null;
     }
 
-    public boolean eliminarProfesor(Long id) {
+    public static boolean eliminarProfesor(Long id) {
         String sql = "DELETE FROM profesor WHERE id = ?";
         boolean registroEliminado = false;
 

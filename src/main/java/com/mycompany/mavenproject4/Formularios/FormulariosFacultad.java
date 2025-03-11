@@ -1,8 +1,9 @@
 package com.mycompany.mavenproject4.Formularios;
 
+import com.mycompany.mavenproject4.Controladores.FacultadController;
+import com.mycompany.mavenproject4.Controladores.PersonaController;
 import com.mycompany.mavenproject4.modelos.Facultad;
 import com.mycompany.mavenproject4.modelos.Persona;
-import com.mycompany.mavenproject4.repositorios.FacultadRepo;
 import com.mycompany.mavenproject4.repositorios.personaRepo;
 
 import java.util.List;
@@ -13,8 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class FormulariosFacultad {
-    static FacultadRepo repositorioFacultad = new FacultadRepo();
-    static personaRepo repositorioPersona = new personaRepo();
+    static FacultadController facultadController = new FacultadController();
+    static PersonaController personaController = new PersonaController();
 
     public static void mostrarFormularioCrearFacultad() {
 
@@ -38,13 +39,12 @@ public class FormulariosFacultad {
 
                 try{
                     Long idDecano = Long.parseLong(idDecanoField.getText());
-                    Persona decano = repositorioPersona.obtenerPersonaByID(idDecano);
+                    Persona decano = personaController.getPersonaById(idDecano);
                     Facultad infoFacultad = new Facultad(null, nombre, decano);
                     if( decano != null){
-                        repositorioFacultad.crearFacultad(infoFacultad);
-                        JOptionPane.showMessageDialog(formularioFrame, "Facultad creada con exito");
+                        facultadController.createFacultad(infoFacultad);
                     }else{
-                        JOptionPane.showMessageDialog(formularioFrame, "Error al crear el facultad");
+                        JOptionPane.showMessageDialog(formularioFrame, "Error al encontrar el decano de ID: "+ idDecano);
                     }
                 }catch(Exception ex){
                     JOptionPane.showMessageDialog(formularioFrame, "Error al crear el facultad");
@@ -82,7 +82,7 @@ public class FormulariosFacultad {
                 String id = idField.getText();
                 try{
                     Long idDecano = Long.parseLong(idField.getText());
-                    if (repositorioFacultad.eliminarFacultad(idDecano)){
+                    if (facultadController.deleteFacultad(idDecano)){
                         JOptionPane.showMessageDialog(formularioFrame, "Facultad eliminado con exito");
                     }
                 }catch (Exception ex){
@@ -131,7 +131,7 @@ public class FormulariosFacultad {
                 String id = idField.getText();
                 try {
                     Long id_Facultad = Long.parseLong(id);
-                    Facultad infoFacultad = repositorioFacultad.obtenerFacultadByID(id_Facultad);
+                    Facultad infoFacultad = facultadController.getFacultadById(id_Facultad);
 
 
                     tableModel.setRowCount(0);
@@ -163,7 +163,7 @@ public class FormulariosFacultad {
     }
 
     public static void mostrarTodosFacultad() {
-        List<Facultad> facultades = repositorioFacultad.obtenerTodasFacultades();
+        List<Facultad> facultades = facultadController.getAllFacultades();
         JFrame frame = new JFrame("Lista de Facultades");
         frame.setSize(600, 400);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -221,17 +221,10 @@ public class FormulariosFacultad {
                     String nombre = nombreField.getText().trim();
                     Long idDecano = Long.parseLong(idDecanoField.getText().trim());
 
-                    Persona infoPersona = repositorioPersona.obtenerPersonaByID(idDecano);
+                    Persona infoPersona = personaController.getPersonaById(idDecano);
                     if (infoPersona != null) {
                         Facultad infoFacultad = new Facultad(idFacultad, nombre, infoPersona);
-                        Facultad actualizado = FacultadRepo.actualizarFacultadPorId(idFacultad, infoFacultad);
-
-                        if (actualizado != null) {
-                            JOptionPane.showMessageDialog(formularioFrame, "Facultad actualizada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                            formularioFrame.dispose();
-                        } else {
-                            JOptionPane.showMessageDialog(formularioFrame, "Error al actualizar la facultad", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
+                        facultadController.updateFacultad(infoFacultad);
                     } else {
                         JOptionPane.showMessageDialog(formularioFrame, "Decano no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -266,7 +259,7 @@ public class FormulariosFacultad {
 
         try {
             Long idFacultad = Long.parseLong(idTexto);
-            Facultad facultad = FacultadRepo.obtenerFacultadByID(idFacultad);
+            Facultad facultad = facultadController.getFacultadById(idFacultad);
 
             if (facultad != null) {
 

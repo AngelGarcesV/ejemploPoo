@@ -1,9 +1,10 @@
 package com.mycompany.mavenproject4.Formularios;
 
+import com.mycompany.mavenproject4.Controladores.ProgramaController;
 import com.mycompany.mavenproject4.modelos.Curso;
 import com.mycompany.mavenproject4.modelos.Programa;
-import com.mycompany.mavenproject4.repositorios.CursoRepo;
-import com.mycompany.mavenproject4.repositorios.ProgramaRepo;
+import com.mycompany.mavenproject4.Controladores.CursoController;
+
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,8 +15,8 @@ import java.util.List;
 
 public class FormulariosCurso {
 
-    private static ProgramaRepo repositorioPrograma = new ProgramaRepo();
-    private static CursoRepo repositorioCurso = new CursoRepo();
+    private static ProgramaController programaController = new ProgramaController();
+    private static CursoController cursoController = new CursoController();
 
     public static void mostrarFormularioCrearCurso() {
         JFrame formularioFrame = new JFrame("Formulario Crear Curso");
@@ -39,10 +40,9 @@ public class FormulariosCurso {
                 boolean activo = activoCheckBox.isSelected();
                 try{
                     Long programa_id = Long.parseLong(programaIdField.getText());
-                    Programa infoPrograma = repositorioPrograma.obtenerProgramaByID(programa_id);
+                    Programa infoPrograma = programaController.getProgramaById(programa_id);
                     if(infoPrograma != null){
-                        Curso nuevoCurso = new Curso(null,infoPrograma, activo);
-                        repositorioCurso.crearCurso(nuevoCurso);
+                        cursoController.createCurso(infoPrograma, activo);
                         JOptionPane.showMessageDialog(formularioFrame, "Curso guardado correctamente");
                     }else{
                         JOptionPane.showMessageDialog(formularioFrame, "El programa no existe");
@@ -83,7 +83,7 @@ public class FormulariosCurso {
                 String id = idField.getText();
                 try{
                     Long id_curso  = Long.parseLong(id);
-                    boolean cursoEliminado = repositorioCurso.eliminarCurso(id_curso);
+                    boolean cursoEliminado = cursoController.deleteCurso(id_curso);
                     if(cursoEliminado){
                         JOptionPane.showMessageDialog(formularioFrame, "Curso eliminado correctamente");
                     }else{
@@ -133,7 +133,7 @@ public class FormulariosCurso {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Long idCurso = Long.parseLong(idField.getText());
-                    Curso curso = repositorioCurso.obtenerCursoByID(idCurso);
+                    Curso curso = cursoController.getCursoById(idCurso);
 
                     if (curso != null) {
 
@@ -160,7 +160,7 @@ public class FormulariosCurso {
     }
 
     public static void mostrarTablaTodosCursos() {
-        List<Curso> cursos = repositorioCurso.obtenerTodosCursos();
+        List<Curso> cursos = cursoController.getAllCursos();
         JFrame frame = new JFrame("Lista de Cursos");
         frame.setSize(600, 400);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -219,12 +219,11 @@ public class FormulariosCurso {
                     Long programaId = Long.parseLong(programaIdField.getText().trim());
                     boolean activo = activoCheckBox.isSelected();
 
-                    Programa programa = repositorioPrograma.obtenerProgramaByID(programaId);
+                    Programa programa = programaController.getProgramaById(programaId);
                     if (programa != null) {
-                        Curso cursoActualizado = new Curso(idCurso, programa, activo);
-                        Curso curosoActualizado = CursoRepo.actualizarCursoPorId(idCurso, cursoActualizado);
+                        boolean cursoActualizado = cursoController.updateCursoById(idCurso, programa, activo);
 
-                        if (curosoActualizado != null) {
+                        if (cursoActualizado) {
                             JOptionPane.showMessageDialog(formularioFrame, "Curso actualizado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                             formularioFrame.dispose();
                         } else {
@@ -265,7 +264,7 @@ public class FormulariosCurso {
 
         try {
             Long idCurso = Long.parseLong(idTexto);
-            Curso curso = repositorioCurso.obtenerCursoByID(idCurso);
+            Curso curso = cursoController.getCursoById(idCurso);
 
             if (curso != null) {
 

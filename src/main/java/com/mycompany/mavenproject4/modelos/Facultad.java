@@ -23,6 +23,10 @@ public class Facultad implements Serializable {
         this.decano = decano;
     }
 
+    public boolean isValid(){
+        return nombre != null && decano != null;
+    }
+
     public Facultad() {
 
     }

@@ -1,5 +1,7 @@
 package com.mycompany.mavenproject4.Formularios;
 
+import com.mycompany.mavenproject4.Controladores.FacultadController;
+import com.mycompany.mavenproject4.Controladores.ProgramaController;
 import com.mycompany.mavenproject4.modelos.Facultad;
 import com.mycompany.mavenproject4.modelos.Programa;
 import com.mycompany.mavenproject4.repositorios.FacultadRepo;
@@ -18,9 +20,8 @@ import java.util.Date;
 
 
 public class FormulariosPrograma {
-    static FacultadRepo repositorioFacultad = new FacultadRepo();
-    static ProgramaRepo repositorioPrograma = new ProgramaRepo();
-    static private JDateChooser dateChooser;
+    static FacultadController facultadController = new FacultadController();
+    static ProgramaController programaController = new ProgramaController();
 
     public static void mostrarFormularioCrearPrograma() {
         JFrame formularioFrame = new JFrame("Formulario Crear Programa");
@@ -56,11 +57,10 @@ public class FormulariosPrograma {
                         return;
                     }
 
-                    Facultad infoFacultad = repositorioFacultad.obtenerFacultadByID(idFacultad);
+                    Facultad infoFacultad = facultadController.getFacultadById (idFacultad);
 
                     if (infoFacultad != null) {
-                        Programa infoPrograma = new Programa(null, nombre, duracion, infoFacultad, registro);
-                        repositorioPrograma.crearPrograma(infoPrograma);
+                        programaController.createPrograma(nombre, duracion, registro, infoFacultad);
                         JOptionPane.showMessageDialog(formularioFrame, "programa creado correctamente", "Info", JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(formularioFrame, "Facultad no encontrada", "Error", JOptionPane.ERROR_MESSAGE);
@@ -105,7 +105,7 @@ public class FormulariosPrograma {
                 String id = idField.getText();
                 try{
                     Long id_Programa = Long.parseLong(id);
-                    boolean eliminado = repositorioPrograma.eliminarPrograma(id_Programa);
+                    boolean eliminado = programaController.deletePrograma(id_Programa);
                     if (eliminado) {
                         JOptionPane.showMessageDialog(formularioFrame, "El registro de programa fue eliminado");
                     }else{
@@ -153,7 +153,7 @@ public class FormulariosPrograma {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Long idPrograma = Long.parseLong(idField.getText());
-                    Programa programa = repositorioPrograma.obtenerProgramaByID(idPrograma);
+                    Programa programa = programaController.getProgramaById(idPrograma);
 
                     if (programa != null) {
                         tableModel.setRowCount(0);
@@ -182,7 +182,7 @@ public class FormulariosPrograma {
     }
 
     public static void mostrarTodosPrograma() {
-        List<Programa> programas = repositorioPrograma.obtenerTodosProgramas();
+        List<Programa> programas = programaController.getAllProgramas();
         JFrame frame = new JFrame("Lista de Programas");
         frame.setSize(700, 400);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -260,12 +260,10 @@ public class FormulariosPrograma {
                         return;
                     }
 
-                    Facultad infoFacultad = repositorioFacultad.obtenerFacultadByID(idFacultad);
+                    Facultad infoFacultad = facultadController.getFacultadById(idFacultad);
 
                     if (infoFacultad != null) {
-                        Programa programaActualizado = new Programa(idPrograma, nombre, duracion, infoFacultad, registro);
-                        repositorioPrograma.actualizarProgramaPorId(idPrograma, programaActualizado);
-
+                        programaController.updatePrograma(idPrograma,  nombre, duracion, registro,infoFacultad);
                         JOptionPane.showMessageDialog(formularioFrame, "Programa actualizado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                         formularioFrame.dispose();
                     } else {
@@ -308,7 +306,7 @@ public class FormulariosPrograma {
 
         try {
             Long idPrograma = Long.parseLong(idTexto);
-            Programa programa = repositorioPrograma.obtenerProgramaByID(idPrograma);
+            Programa programa = programaController.getProgramaById(idPrograma);
 
             if (programa != null) {
                 nombreField.setText(programa.getNombre());

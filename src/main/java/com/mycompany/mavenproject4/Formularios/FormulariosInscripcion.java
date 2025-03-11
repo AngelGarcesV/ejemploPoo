@@ -1,12 +1,11 @@
 package com.mycompany.mavenproject4.Formularios;
 
-import com.mycompany.mavenproject4.Controladores.CursosInscritos;
+import com.mycompany.mavenproject4.Controladores.CursoController;
+import com.mycompany.mavenproject4.Controladores.EstudianteController;
+import com.mycompany.mavenproject4.Controladores.InscripcionController;
 import com.mycompany.mavenproject4.modelos.Curso;
-import com.mycompany.mavenproject4.modelos.CursoProfesor;
 import com.mycompany.mavenproject4.modelos.Estudiante;
 import com.mycompany.mavenproject4.modelos.Inscripcion;
-import com.mycompany.mavenproject4.repositorios.CursoRepo;
-import com.mycompany.mavenproject4.repositorios.EstudianteRepo;
 import com.mycompany.mavenproject4.repositorios.InscripcionRepo;
 
 import java.util.List;
@@ -15,29 +14,13 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+
 
 public class FormulariosInscripcion {
-    static EstudianteRepo repositorioEstudiante = new EstudianteRepo();
-    static CursoRepo repositorioCurso = new CursoRepo();
-    static InscripcionRepo repositorioInscripcion = new InscripcionRepo();
-    public static CursosInscritos cursosInscritos = new CursosInscritos(new ArrayList<Inscripcion>());
-    static String ArchivoInscripciones = "Inscripciones.dat";
+    static EstudianteController estudianteController = new EstudianteController();
+    static CursoController cursoController = new CursoController();
+    static InscripcionController inscripcionController = new InscripcionController();
 
-    private static void guardarInscripcionDB_Archivo(Curso infoCurso, int año, int semestre, Estudiante infoEstudiante, String archivoInscripciones) {
-        Inscripcion nuevaInscripcion = repositorioInscripcion.crearInscripcion (new Inscripcion(null, infoCurso,año,semestre,infoEstudiante));
-        cursosInscritos.inscribir(nuevaInscripcion);
-        cursosInscritos.guardarInformacion(archivoInscripciones);
-    }
-
-    private static void actualizarInscripcionDB_Archivo(Long idInscripcion, Curso infoCurso, int año, int semestre, Estudiante infoEstudiante, String archivoInscripciones){
-        Inscripcion inscripcionActualizada = new Inscripcion(idInscripcion, infoCurso, año, semestre, infoEstudiante);
-
-
-        InscripcionRepo.actualizarInscripcionPorId(idInscripcion, inscripcionActualizada);
-        cursosInscritos.actualizar(inscripcionActualizada);
-        cursosInscritos.guardarInformacion(archivoInscripciones);
-    }
 
 
     public static void mostrarFormularioCrearInscripcion() {
@@ -66,14 +49,19 @@ public class FormulariosInscripcion {
                     int semestre = Integer.parseInt(semestreField.getText());
                     Long estudianteId = Long.parseLong(estudianteIdField.getText());
 
-                    Curso infoCurso = repositorioCurso.obtenerCursoByID(idCurso);
-                    Estudiante infoEstudiante = repositorioEstudiante.obtenerEstudianteByID(estudianteId);
+                    Curso infoCurso = cursoController.getCursoById(idCurso);
+                    Estudiante infoEstudiante = estudianteController.getEstudianteById(estudianteId);
 
                     if (infoCurso != null && infoEstudiante != null) {
-                        guardarInscripcionDB_Archivo(infoCurso,año,semestre,infoEstudiante, ArchivoInscripciones);
-                        JOptionPane.showMessageDialog(formularioFrame, "Curso guardado correctamente");
+                        Inscripcion infoInscripcion = new Inscripcion(null, infoCurso, año, semestre, infoEstudiante);
+                        Inscripcion nuevaInscripcion = inscripcionController.createInscripcion(infoInscripcion);
+                        if (nuevaInscripcion != null) {
+                            JOptionPane.showMessageDialog(formularioFrame, "Inscripción guardada correctamente");
+                        }else{
+                            JOptionPane.showMessageDialog(formularioFrame, "Error al guardar inscripción");
+                        }
                     }else{
-                        JOptionPane.showMessageDialog(formularioFrame, "El Curso no existe");
+                        JOptionPane.showMessageDialog(formularioFrame, "El curso o el estudiante no existe");
                     }
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(formularioFrame, ex.getMessage());
@@ -114,11 +102,8 @@ public class FormulariosInscripcion {
                 String id = idField.getText();
                 try{
                     Long idInscripcion = Long.parseLong(id);
-                    Inscripcion infoArchivo = InscripcionRepo.obtenerInscripcionByID(idInscripcion);
-                    boolean inscripcionEliminada = repositorioInscripcion.eliminarInscripcion(idInscripcion);
+                    boolean inscripcionEliminada = inscripcionController.deleteInscripcion(idInscripcion);
                     if(inscripcionEliminada){
-                        cursosInscritos.eliminar(infoArchivo);
-                        cursosInscritos.guardarInformacion(ArchivoInscripciones);
                         JOptionPane.showMessageDialog(formularioFrame, "La inscripción se ha eliminado");
                     }else{
                         JOptionPane.showMessageDialog(formularioFrame, "El Inscripcion no existe");
@@ -141,7 +126,7 @@ public class FormulariosInscripcion {
         formularioFrame.setVisible(true);
     }
     public static void mostrarTablaTodasInscripciones() {
-        List<Inscripcion> inscripciones = repositorioInscripcion.obtenerTodasInscripciones();
+        List<Inscripcion> inscripciones = inscripcionController.getAllInscripciones();
         JFrame frame = new JFrame("Lista de Inscripciones");
         frame.setSize(600, 400);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -262,15 +247,22 @@ public class FormulariosInscripcion {
                     int semestre = Integer.parseInt(semestreField.getText().trim());
                     Long idEstudiante = Long.parseLong(estudianteIdField.getText().trim());
 
-                    Estudiante infoEstudiante = repositorioEstudiante.obtenerEstudianteByID(idEstudiante);
-                    Curso infoCurso = repositorioCurso.obtenerCursoByID(idCurso);
+                    Estudiante infoEstudiante = estudianteController.getEstudianteById(idEstudiante);
+                    Curso infoCurso = cursoController.getCursoById(idCurso);
                     if(infoCurso != null && infoEstudiante != null){
-                        actualizarInscripcionDB_Archivo(idInscripcion,infoCurso,año,semestre,infoEstudiante,ArchivoInscripciones);
+                        Inscripcion infoInscripcion  = new Inscripcion(idInscripcion,infoCurso,año,semestre,infoEstudiante);
+                        Inscripcion inscripcionActualizada = inscripcionController.updateInscripcion(infoInscripcion);
+                        if(inscripcionActualizada != null){
+                            JOptionPane.showMessageDialog(formularioFrame, "Inscripción actualizada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                        }else{
+                            JOptionPane.showMessageDialog(formularioFrame, "No fue posible actualizar la inscripción");
+                        }
+
                     }else{
                         JOptionPane.showMessageDialog(formularioFrame, "No se encontro en estudiante o curso");
                     }
 
-                    JOptionPane.showMessageDialog(formularioFrame, "Inscripción actualizada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
                     formularioFrame.dispose();
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(formularioFrame, "Ingrese valores válidos", "Error", JOptionPane.ERROR_MESSAGE);

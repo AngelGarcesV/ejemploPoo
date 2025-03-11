@@ -101,9 +101,8 @@ public class personaRepo {
         return registroEliminado;
     }
 
-    public boolean actualizarPersonaPorId(Long id, Persona nuevaPersona) {
+    public Persona actualizarPersonaPorId(Long id, Persona nuevaPersona) {
         String sql = "UPDATE persona SET nombres = ?, apellidos = ?, email = ? WHERE id = ?";
-        boolean registroActualizado = false;
 
         try (Connection connection = DatabaseManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -114,11 +113,14 @@ public class personaRepo {
             statement.setLong(4, id);
 
             int affectedRows = statement.executeUpdate();
-            registroActualizado = affectedRows > 0;
+
+            if (affectedRows > 0) {
+                return this.obtenerPersonaByID(id);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return registroActualizado;
+        return null;
     }
 }

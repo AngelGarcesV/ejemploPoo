@@ -1,6 +1,9 @@
 package com.mycompany.mavenproject4.Formularios;
 
-import com.mycompany.mavenproject4.Controladores.CursosProfesores;
+import com.mycompany.mavenproject4.Controladores.CursoController;
+import com.mycompany.mavenproject4.Controladores.CursoProfesorController;
+import com.mycompany.mavenproject4.Controladores.ProfesorController;
+import com.mycompany.mavenproject4.ControladoresArchivosBinarios.CursosProfesores;
 import com.mycompany.mavenproject4.modelos.Curso;
 import com.mycompany.mavenproject4.modelos.CursoProfesor;
 import com.mycompany.mavenproject4.modelos.Profesor;
@@ -14,28 +17,12 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class FormulariosCursoProfesor {
 
-    static ProfesorRepo repositorioProfesor = new ProfesorRepo();
-    static CursoRepo repositorioCurso = new CursoRepo();
-    static CursoProfesorRepo repositorioCursoProfesor = new CursoProfesorRepo();
-    public static CursosProfesores inscripcionCursosProfesores = new CursosProfesores(new ArrayList<CursoProfesor>());
-    static String ArchivoCursosProfesor = "cursosProfesores.dat";
-
-    public static void guardarCursosProfesoresDB_InscribirArchivo(Profesor infoProfesor, int año, int semestre, Curso infoCurso, String nombreArchivo){
-        CursoProfesor infoCursoProfesor = new CursoProfesor(null,infoProfesor,año,semestre,infoCurso);
-        CursoProfesor nuevoCursoProfesor = repositorioCursoProfesor.crearCursoProfesor(infoCursoProfesor);
-        inscripcionCursosProfesores.inscribir(nuevoCursoProfesor);
-        inscripcionCursosProfesores.guardarInformacion(nombreArchivo);
-    }
-
-    public static void ActualizarCurssosProfesoresDB_ActualizarArchivo(Long id, Profesor profesor, int año, int semestre, Curso curso, String nombreArchivo){
-        CursoProfesor cursoProfesorActualizado = new CursoProfesor(id,profesor,año,semestre,curso);
-        repositorioCursoProfesor.actualizarCursoProfesorPorId(id, cursoProfesorActualizado);
-        inscripcionCursosProfesores.guardarInformacion(nombreArchivo);
-    }
+    static ProfesorController profesorController = new ProfesorController();
+    static CursoController cursoController = new CursoController();
+    static CursoProfesorController cursoProfesorController = new CursoProfesorController();
 
     public static void mostrarFormularioCrearCursoProfesor() {
         JFrame formularioFrame = new JFrame("Formulario Crear CursoProfesor");
@@ -61,13 +48,17 @@ public class FormulariosCursoProfesor {
                 try{
                     Long idProfesor = Long.parseLong(idProfesorField.getText());
                     Long idcurso = Long.parseLong(cursoField.getText());
-                    Profesor infoProfesor = repositorioProfesor.obtenerProfesorByID(idProfesor);
-                    Curso infoCurso = repositorioCurso.obtenerCursoByID(idcurso);
+                    Profesor infoProfesor = profesorController.getProfesorById(idProfesor);
+                    Curso infoCurso = cursoController.getCursoById(idcurso);
                     if (infoProfesor != null && infoCurso != null) {
+                        CursoProfesor infoCursoProfesor = new CursoProfesor(null,infoProfesor,año,semestre,infoCurso);
+                        CursoProfesor nuevoCursoProfesor = cursoProfesorController.createCursoProfesor(infoCursoProfesor);
+                        if(nuevoCursoProfesor != null){
+                            JOptionPane.showMessageDialog(formularioFrame, "Curso/Profesor creado correctamente");
+                        }else{
+                            JOptionPane.showMessageDialog(formularioFrame, "No fue posible crear el Curso/Profesor");
+                        }
 
-                        guardarCursosProfesoresDB_InscribirArchivo(infoProfesor,año,semestre, infoCurso,ArchivoCursosProfesor);
-
-                        JOptionPane.showMessageDialog(formularioFrame, "Profesor Creado Exitosamente");
                     }else{
                         JOptionPane.showMessageDialog(formularioFrame, "Profesor o Curso no encontrado");
                     }
@@ -110,7 +101,7 @@ public class FormulariosCursoProfesor {
                 String id = idField.getText();
                 try{
                     Long idCursoProfesor = Long.parseLong(id);
-                    boolean eliminado = repositorioCursoProfesor.eliminarCursoProfesor(idCursoProfesor);
+                    boolean eliminado = cursoProfesorController.deleteCursoProfesor(idCursoProfesor);
                     if (eliminado){
                         JOptionPane.showMessageDialog(formularioFrame, "Curso eliminado");
                     }else{
@@ -161,7 +152,7 @@ public class FormulariosCursoProfesor {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Long idCursoProfesor = Long.parseLong(idField.getText());
-                    CursoProfesor cursoProfesor = repositorioCursoProfesor.obtenerCursoProfesorByID(idCursoProfesor);
+                    CursoProfesor cursoProfesor = cursoProfesorController.getCursoProfesorById(idCursoProfesor);
 
                     if (cursoProfesor != null) {
 
@@ -190,7 +181,7 @@ public class FormulariosCursoProfesor {
     }
 
     public static void mostrarTablaCursoProfesor() {
-        List<CursoProfesor> cursoProfesores = repositorioCursoProfesor.obtenerTodosCursoProfesor();
+        List<CursoProfesor> cursoProfesores = cursoProfesorController.getAllCursoProfesor();
         JFrame frame = new JFrame("Lista de Curso - Profesor");
         frame.setSize(600, 400);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -263,14 +254,19 @@ public class FormulariosCursoProfesor {
                     int semestre = Integer.parseInt(semestreField.getText().trim());
                     long idCurso = Long.parseLong(cursoField.getText().trim());
                     long idProfesor = Long.parseLong(idProfesorField.getText().trim());
-                    Curso curso = repositorioCurso.obtenerCursoByID(idCurso);
-                    Profesor profesor = repositorioProfesor.obtenerProfesorByID(idProfesor);
+                    Curso curso = cursoController.getCursoById(idCurso);
+                    Profesor profesor = profesorController.getProfesorById(idProfesor);
                     if (curso == null || profesor == null) {
                         JOptionPane.showMessageDialog(formularioFrame, "Curso o Profesor no encontrados.", "Error", JOptionPane.ERROR_MESSAGE);
                         return;
                     }else{
-
-                        ActualizarCurssosProfesoresDB_ActualizarArchivo(id, profesor,año,semestre,curso,ArchivoCursosProfesor);
+                        CursoProfesor infoCursoProfesor = new CursoProfesor(null,profesor,año,semestre,curso);
+                        CursoProfesor cursoProfesorUpdate = cursoProfesorController.updateCursoProfesor (infoCursoProfesor);
+                        if (cursoProfesorUpdate != null) {
+                            JOptionPane.showMessageDialog(null, "Se actualizo el Curso/Profesor de manera correcta");
+                        }else{
+                            JOptionPane.showMessageDialog(null, "No fue posible actualizar el Curso/Profesor de manera correcta");
+                        }
                     }
 
                     JOptionPane.showMessageDialog(formularioFrame, "CursoProfesor actualizado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -313,7 +309,7 @@ public class FormulariosCursoProfesor {
 
         try {
             long id = Long.parseLong(idTexto);
-            CursoProfesor cursoProfesor = repositorioCursoProfesor.obtenerCursoProfesorByID(id);
+            CursoProfesor cursoProfesor = cursoProfesorController.getCursoProfesorById(id);
 
             if (cursoProfesor != null) {
 

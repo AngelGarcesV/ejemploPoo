@@ -23,6 +23,11 @@ public class Profesor extends Persona implements Serializable {
        
     }
 
+    @Override
+    public boolean isValid() {
+        return super.isValid() && TipoContrato != null;
+    }
+
     public Profesor(String TipoContrato, Long ID, String nombres, String apellidos, String email) {
         super(ID, nombres, apellidos, email);
         this.TipoContrato = TipoContrato;

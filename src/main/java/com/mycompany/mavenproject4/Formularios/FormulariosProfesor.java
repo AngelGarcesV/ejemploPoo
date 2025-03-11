@@ -1,5 +1,6 @@
 package com.mycompany.mavenproject4.Formularios;
 
+import com.mycompany.mavenproject4.Controladores.ProfesorController;
 import com.mycompany.mavenproject4.modelos.Profesor;
 import com.mycompany.mavenproject4.repositorios.ProfesorRepo;
 
@@ -12,7 +13,7 @@ import java.awt.event.ActionListener;
 
 public class FormulariosProfesor {
 
-    private static ProfesorRepo repositorioProfesor = new ProfesorRepo();
+    public static ProfesorController profesorController = new ProfesorController();
 
     public static void mostrarFormularioCrearProfesor() {
         JFrame formularioFrame = new JFrame("Formulario Crear Profesor");
@@ -38,9 +39,8 @@ public class FormulariosProfesor {
                 String apellidos = apellidosField.getText();
                 String email = emailField.getText();
                 String tipoContrato = tipoContratoField.getText();
-
-                Profesor nuevoProfesor = new Profesor(tipoContrato,null,nombres,apellidos,email);
-                repositorioProfesor.crearProfesor(nuevoProfesor);
+                Profesor infoProfesor = new Profesor(tipoContrato,null, nombres,apellidos,email);
+                profesorController.createProfesor(infoProfesor);
                 JOptionPane.showMessageDialog(formularioFrame,"Profesor Creado");
 
 
@@ -63,7 +63,7 @@ public class FormulariosProfesor {
         formularioFrame.setVisible(true);
     }
     public static void mostrarTablaTodosProfesores() {
-        List<Profesor> profesores = repositorioProfesor.obtenerTodosProfesor();
+        List<Profesor> profesores = profesorController.getAllProfesor();
         JFrame frame = new JFrame("Lista de Profesores");
         frame.setSize(600, 400);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -100,7 +100,7 @@ public class FormulariosProfesor {
                 String idProfesor = idProfesorField.getText();
                 try{
                     Long id = Long.parseLong(idProfesor);
-                    boolean profesorEliminado = repositorioProfesor.eliminarProfesor(id);
+                    boolean profesorEliminado = profesorController.deleteProfesor(id);
                     if(profesorEliminado){
                         JOptionPane.showMessageDialog(formularioFrame,"Profesor Eliminado");
                     }else{
@@ -150,7 +150,7 @@ public class FormulariosProfesor {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Long idPersona = Long.parseLong(idField.getText());
-                    Profesor profesor = repositorioProfesor.obtenerProfesorByID(idPersona);
+                    Profesor profesor = profesorController.getProfesorById(idPersona);
 
                     if (profesor != null) {
 
@@ -221,9 +221,8 @@ public class FormulariosProfesor {
                     String nombres = nombresField.getText();
                     String apellidos = apellidosField.getText();
                     String email = emailField.getText();
-
-                    Profesor profesorActualizado = new Profesor(tipoContrato,idPersona,nombres, apellidos,email);
-                    repositorioProfesor.actualizarProfesorPorId(idPersona, profesorActualizado);
+                    Profesor infoProfesor = new Profesor(tipoContrato,null, nombres,apellidos,email);
+                    profesorController.updateProfesor(infoProfesor);
 
                     JOptionPane.showMessageDialog(formularioFrame, "Profesor actualizado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                     formularioFrame.dispose();
@@ -264,7 +263,7 @@ public class FormulariosProfesor {
 
         try {
             long idPersona = Long.parseLong(idTexto);
-            Profesor profesor = repositorioProfesor.obtenerProfesorByID(idPersona);
+            Profesor profesor = profesorController.getProfesorById(idPersona);
 
             if (profesor != null) {
                 nombresField.setText(profesor.getNombres());

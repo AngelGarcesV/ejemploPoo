@@ -1,4 +1,7 @@
 package com.mycompany.mavenproject4;
+import com.mycompany.mavenproject4.Controladores.CursoProfesorController;
+import com.mycompany.mavenproject4.Controladores.InscripcionController;
+import com.mycompany.mavenproject4.Controladores.PersonaController;
 import com.mycompany.mavenproject4.Formularios.*;
 import javax.swing.*;
 import java.awt.*;
@@ -7,11 +10,11 @@ import java.awt.*;
 public class Mavenproject4  {
         public static void main(String[] args) {
             String ArchivoInformacionInscritos = "informacionInscritos.dat";
-            FormulariosPersona.inscripcionesPersonas.cargarDatos(ArchivoInformacionInscritos);
+            PersonaController.inscripcionesPersonas.cargarDatos(ArchivoInformacionInscritos);
             String ArchivoInscripciones = "Inscripciones.dat";
-            FormulariosInscripcion.cursosInscritos.cargarDatos(ArchivoInscripciones);
+            InscripcionController.cursosInscritos.cargarDatos(ArchivoInscripciones);
             String ArchivoCursosProfesor = "CursosProfesores.dat";
-            FormulariosCursoProfesor.inscripcionCursosProfesores.cargarDatos(ArchivoCursosProfesor);
+            CursoProfesorController.inscripcionCursosProfesores.cargarDatos(ArchivoCursosProfesor);
 
 
 

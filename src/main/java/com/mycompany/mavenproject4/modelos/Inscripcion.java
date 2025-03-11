@@ -26,6 +26,9 @@ public class Inscripcion implements Serializable {
         this.semestre = semestre;
         this.estudiante = estudiante;
     }
+    public boolean isValid(){
+        return curso.isValid() && this.año > 1000 && this.semestre > 0 && this.estudiante != null;
+    }
 
     public Inscripcion() {
 

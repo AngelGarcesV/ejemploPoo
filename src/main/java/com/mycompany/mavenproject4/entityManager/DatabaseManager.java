@@ -1,13 +1,15 @@
 package com.mycompany.mavenproject4.entityManager;
 
+import com.mycompany.mavenproject4.PropertiesLoader.PropertiesLoader;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseManager {
-    private static final String URL = "jdbc:h2:~/test;AUTO_SERVER=TRUE";
-    private static final String USER = "sa";
-    private static final String PASSWORD = "";
+    private static final String URL = PropertiesLoader.get("database.url");
+    private static final String USER = PropertiesLoader.get("database.user");
+    private static final String PASSWORD = PropertiesLoader.get("database.password");
 
     static {
         try {

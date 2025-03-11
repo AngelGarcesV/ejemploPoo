@@ -1,0 +1,9 @@
+2025-03-07 16:06:32.612928-05:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PERSONA" not found (this database is empty); SQL statement:
+INSERT INTO persona (nombres, apellidos, email) VALUES (?, ?, ?) [42104-224]
+2025-03-07 16:07:12.383429-05:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PERSONA" not found (this database is empty); SQL statement:
+INSERT INTO persona (nombres, apellidos, email) VALUES (?, ?, ?) [42104-224]
+2025-03-07 16:07:55.453915-05:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "PERSONA" not found (this database is empty); SQL statement:
+INSERT INTO persona (nombres, apellidos, email) VALUES (?, ?, ?) [42104-224]

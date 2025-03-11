@@ -8,43 +8,17 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mycompany.mavenproject4.Controladores.InscripcionesPersonas;
+import com.mycompany.mavenproject4.Controladores.PersonaController;
+import com.mycompany.mavenproject4.ControladoresArchivosBinarios.InscripcionesPersonas;
 import com.mycompany.mavenproject4.modelos.Persona;
 import com.mycompany.mavenproject4.repositorios.personaRepo;
 
 
 public class FormulariosPersona {
 
-    static String ArchivoInformacionInscritos = "informacionInscritos.dat";
-    static personaRepo repositorioPersona = new personaRepo();
-    public static InscripcionesPersonas inscripcionesPersonas = new InscripcionesPersonas(new ArrayList<Persona>());
 
-
-    public static void guardarPersonaDB_InscribirArchivo(String nombres, String apellidos, String email, String NombreArchivo) {
-        Persona infoPersona = new Persona(nombres, apellidos, email);
-        Persona NuevaPersona= repositorioPersona.crearPersona(infoPersona);
-        if(NuevaPersona!=null){
-
-            inscripcionesPersonas.inscribir(NuevaPersona);
-            inscripcionesPersonas.guardarInformacionArchivo(NombreArchivo);
-            JOptionPane.showMessageDialog(null, "Persona Creada con exito");
-        }else{
-            JOptionPane.showMessageDialog(null, "Fallo al crear la persona");
-        }
-    }
-    public static void actualizarPersonaDB_ActualizarArchivo(Long id, String nombres, String apellidos, String email, String NombreArchivo) {
-        Persona infoPersona = new Persona(id, nombres, apellidos, email);
-        boolean personaEditada = repositorioPersona.actualizarPersonaPorId(id,infoPersona);
-        if(personaEditada){
-            inscripcionesPersonas.actualizar(infoPersona);
-            inscripcionesPersonas.guardarInformacionArchivo(NombreArchivo);
-            JOptionPane.showMessageDialog(null, "Persona Actualizada con exito");
-        }else{
-            JOptionPane.showMessageDialog(null, "Persona no encontrada");
-        }
-
-
-    }
+    static PersonaController controllerPersona = new PersonaController();
+    
 
 
     public static void mostrarFormularioCrearPersona() {
@@ -70,9 +44,11 @@ public class FormulariosPersona {
                 String nombres = nombresField.getText();
                 String apellidos = apellidosField.getText();
                 String email = emailField.getText();
-
-                guardarPersonaDB_InscribirArchivo(nombres,apellidos,email,ArchivoInformacionInscritos);
-
+                Persona infoPersona = new Persona(null, nombres,apellidos,email);
+                String mensajeVentana = "";
+                Persona nuevaPersona = controllerPersona.createPersona(infoPersona);
+                mensajeVentana = (nuevaPersona != null) ? "Se creó la persona de manera correcta" : "Error al crear la persona";
+                JOptionPane.showMessageDialog(formularioFrame, mensajeVentana);
                 formularioFrame.dispose();
             }
         });
@@ -106,10 +82,10 @@ public class FormulariosPersona {
                 String id = idField.getText();
                 try {
                     long idLong = Long.parseLong(id);
-                    if(repositorioPersona.eliminarPersona(idLong)){
-                        JOptionPane.showMessageDialog(null, "Persona Eliminado con exito");
+                    if(controllerPersona.deletePersona(idLong)){
+                        JOptionPane.showMessageDialog(formularioFrame, "Persona Eliminado con exito");
                     }else{
-                        JOptionPane.showMessageDialog(null, "Persona no encontrada");
+                        JOptionPane.showMessageDialog(formularioFrame, "Persona no encontrada");
                     }
                 }catch (Exception error){
 
@@ -164,8 +140,7 @@ public class FormulariosPersona {
 
                 try {
                     long idLong = Long.parseLong(idTexto);
-                    Persona personaConsultada = repositorioPersona.obtenerPersonaByID(idLong);
-
+                    Persona personaConsultada = controllerPersona.getPersonaById(idLong);
 
                     tableModel.setRowCount(0);
 
@@ -193,7 +168,7 @@ public class FormulariosPersona {
 
 
     public static void mostrarTablaTodasPersonas() {
-        List<Persona> personas = repositorioPersona.obtenerTodosPersona();
+        List<Persona> personas = controllerPersona.getAllPersonas();
         JFrame frame = new JFrame("Lista de Personas");
         frame.setSize(600, 400);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -280,8 +255,10 @@ public class FormulariosPersona {
                         return;
                     }
 
-
-                    actualizarPersonaDB_ActualizarArchivo(idLong, nombres, apellidos, email, ArchivoInformacionInscritos);
+                    Persona infoPersona = new Persona(idLong, nombres, apellidos, email);
+                    Persona personaUpdate = controllerPersona.updatePersona(idLong, infoPersona);
+                    String mensajeVentana = personaUpdate != null ? "Se actualizo la persona de manera correcta" : "Error al actualizar la persona";
+                        JOptionPane.showMessageDialog(formularioFrame,mensajeVentana , "Error", JOptionPane.ERROR_MESSAGE);
 
                     formularioFrame.dispose();
 
@@ -305,7 +282,7 @@ public class FormulariosPersona {
 
         try {
             long idLong = Long.parseLong(idTexto);
-            Persona personaConsultada = repositorioPersona.obtenerPersonaByID(idLong);
+            Persona personaConsultada = controllerPersona.getPersonaById(idLong);
 
             if (personaConsultada != null) {
                 nombreField.setText(personaConsultada.getNombres());
