@@ -93,7 +93,7 @@ public class InscripcionesPersonas implements Serializable {
     public void cargarDatos(String nombreArchivo) {
         try (FileInputStream fis = new FileInputStream(nombreArchivo);
              ObjectInputStream ois = new ObjectInputStream(fis)) {
-            listadoInscripcionPersonas = (List<Persona>) ois.readObject();  // Leemos la lista completa
+            listadoInscripcionPersonas = (List<Persona>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }

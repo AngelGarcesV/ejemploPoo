@@ -14,6 +14,7 @@ import java.io.Serializable;
  */
 
 public class CursoProfesor implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Long id;
     private Profesor profesor;
     private int año;
@@ -21,6 +22,7 @@ public class CursoProfesor implements Serializable {
     private Curso curso;
 
     public CursoProfesor(Long id, Profesor profesor, int año, int semestre, Curso curso) {
+
         this.id = id;
         this.profesor = profesor;
         this.año = año;

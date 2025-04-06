@@ -1,6 +1,7 @@
 package com.mycompany.mavenproject4.Formularios;
 
 import com.mycompany.mavenproject4.Controladores.ProgramaController;
+import com.mycompany.mavenproject4.Observador.CursoSubject;
 import com.mycompany.mavenproject4.modelos.Curso;
 import com.mycompany.mavenproject4.modelos.Programa;
 import com.mycompany.mavenproject4.Controladores.CursoController;
@@ -16,7 +17,8 @@ import java.util.List;
 public class FormulariosCurso {
 
     private static ProgramaController programaController = new ProgramaController();
-    private static CursoController cursoController = new CursoController();
+    public static CursoController cursoController = new CursoController();
+
 
     public static void mostrarFormularioCrearCurso() {
         JFrame formularioFrame = new JFrame("Formulario Crear Curso");
@@ -36,18 +38,20 @@ public class FormulariosCurso {
         crearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                 String nombreCurso = nombreField.getText();
+                CursoSubject cursoSubject = new CursoSubject();
+                String nombreCurso = nombreField.getText();
                 boolean activo = activoCheckBox.isSelected();
-                try{
+                try {
                     Long programa_id = Long.parseLong(programaIdField.getText());
                     Programa infoPrograma = programaController.getProgramaById(programa_id);
-                    if(infoPrograma != null){
+                    if (infoPrograma != null) {
                         cursoController.createCurso(infoPrograma, activo);
                         JOptionPane.showMessageDialog(formularioFrame, "Curso guardado correctamente");
-                    }else{
+                        cursoSubject.notificarObservers();
+                    } else {
                         JOptionPane.showMessageDialog(formularioFrame, "El programa no existe");
                     }
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(formularioFrame, "No fue posible crear el curso");
                 }
                 formularioFrame.dispose();
@@ -63,11 +67,12 @@ public class FormulariosCurso {
         formularioFrame.add(new JLabel());
         formularioFrame.add(crearButton);
 
-
         formularioFrame.setVisible(true);
     }
 
+
     public static void mostrarFormularioEliminarCurso() {
+        CursoSubject cursoSubject = new CursoSubject();
         JFrame formularioFrame = new JFrame("Formulario Eliminar Curso");
         formularioFrame.setSize(400, 300);
         formularioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -85,6 +90,7 @@ public class FormulariosCurso {
                     Long id_curso  = Long.parseLong(id);
                     boolean cursoEliminado = cursoController.deleteCurso(id_curso);
                     if(cursoEliminado){
+                        cursoSubject.notificarObservers();
                         JOptionPane.showMessageDialog(formularioFrame, "Curso eliminado correctamente");
                     }else{
                         JOptionPane.showMessageDialog(formularioFrame, "El curso no existe");
@@ -182,6 +188,7 @@ public class FormulariosCurso {
 
 
     public static void mostrarFormularioActualizarCurso() {
+        CursoSubject cursoSubject = new CursoSubject();
         JFrame formularioFrame = new JFrame("Actualizar Curso");
         formularioFrame.setSize(400, 300);
         formularioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -224,6 +231,7 @@ public class FormulariosCurso {
                         boolean cursoActualizado = cursoController.updateCursoById(idCurso, programa, activo);
 
                         if (cursoActualizado) {
+                            cursoSubject.notificarObservers();
                             JOptionPane.showMessageDialog(formularioFrame, "Curso actualizado con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                             formularioFrame.dispose();
                         } else {

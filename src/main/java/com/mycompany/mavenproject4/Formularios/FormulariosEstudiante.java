@@ -15,7 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class FormulariosEstudiante {
-    static EstudianteController estudianteController = new EstudianteController();
+    public static EstudianteController estudianteController = new EstudianteController();
     static ProgramaController programaController = new ProgramaController();
 
     public static void mostrarFormularioCrearEstudiante() {

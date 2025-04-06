@@ -1,6 +1,8 @@
 package com.mycompany.mavenproject4.Formularios;
 
 import com.mycompany.mavenproject4.Controladores.ProfesorController;
+import com.mycompany.mavenproject4.Factory.PersonaFactory;
+import com.mycompany.mavenproject4.Observador.ProfesorSubject;
 import com.mycompany.mavenproject4.modelos.Profesor;
 import com.mycompany.mavenproject4.repositorios.ProfesorRepo;
 
@@ -16,6 +18,7 @@ public class FormulariosProfesor {
     public static ProfesorController profesorController = new ProfesorController();
 
     public static void mostrarFormularioCrearProfesor() {
+        ProfesorSubject profesorSubject = new ProfesorSubject();
         JFrame formularioFrame = new JFrame("Formulario Crear Profesor");
         formularioFrame.setSize(400, 300);
         formularioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -39,10 +42,10 @@ public class FormulariosProfesor {
                 String apellidos = apellidosField.getText();
                 String email = emailField.getText();
                 String tipoContrato = tipoContratoField.getText();
-                Profesor infoProfesor = new Profesor(tipoContrato,null, nombres,apellidos,email);
+                Profesor infoProfesor = PersonaFactory.crearProfesor(tipoContrato,null, nombres,apellidos,email);
                 profesorController.createProfesor(infoProfesor);
                 JOptionPane.showMessageDialog(formularioFrame,"Profesor Creado");
-
+                profesorSubject.notificarObservers();
 
                 formularioFrame.dispose();
             }
@@ -85,6 +88,7 @@ public class FormulariosProfesor {
 
 
     public static void mostrarFormularioEliminarProfesor() {
+        ProfesorSubject profesorSubject = new ProfesorSubject();
         JFrame formularioFrame = new JFrame("Formulario Eliminar Profesor");
         formularioFrame.setSize(400, 300);
         formularioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -102,6 +106,7 @@ public class FormulariosProfesor {
                     Long id = Long.parseLong(idProfesor);
                     boolean profesorEliminado = profesorController.deleteProfesor(id);
                     if(profesorEliminado){
+                        profesorSubject.notificarObservers();
                         JOptionPane.showMessageDialog(formularioFrame,"Profesor Eliminado");
                     }else{
                         JOptionPane.showMessageDialog(formularioFrame,"Profesor no eliminado");
@@ -179,6 +184,7 @@ public class FormulariosProfesor {
     }
 
     public static void mostrarFormularioActualizarProfesor() {
+        ProfesorSubject profesorSubject = new ProfesorSubject();
         JFrame formularioFrame = new JFrame("Formulario Actualizar Profesor");
         formularioFrame.setSize(400, 300);
         formularioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -221,10 +227,11 @@ public class FormulariosProfesor {
                     String nombres = nombresField.getText();
                     String apellidos = apellidosField.getText();
                     String email = emailField.getText();
-                    Profesor infoProfesor = new Profesor(tipoContrato,null, nombres,apellidos,email);
+                    Profesor infoProfesor = PersonaFactory.crearProfesor(tipoContrato,null, nombres,apellidos,email);
                     profesorController.updateProfesor(infoProfesor);
 
                     JOptionPane.showMessageDialog(formularioFrame, "Profesor actualizado correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    profesorSubject.notificarObservers();
                     formularioFrame.dispose();
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(formularioFrame, "Ingrese un ID válido", "Error", JOptionPane.ERROR_MESSAGE);

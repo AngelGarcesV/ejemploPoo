@@ -15,6 +15,7 @@ import java.io.Serializable;
 
 public class Curso implements Serializable {
     private  Long id;
+    private String nombre;
     private Programa programa;
     private Boolean activo;
 

@@ -4,6 +4,7 @@
  */
 package com.mycompany.mavenproject4.modelos;
 
+import com.mycompany.mavenproject4.modelos.interfaces.Ipersona;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -12,15 +13,14 @@ import java.io.Serializable;
  *
  * @author Estudiante_MCA
  */
-public class Persona implements Serializable {
+public class Persona implements Serializable, Ipersona {
+    private static final long serialVersionUID = 1L;
     private Long ID;
     private String nombres;
     private String apellidos;
     private String email;
 
-    public boolean isValid(){
-        return nombres!=null && apellidos!=null && email!=null;
-    }
+
 
     public Persona(Long ID, String nombres, String apellidos, String email) {
         this.ID = ID;
@@ -68,8 +68,12 @@ public class Persona implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-    
-    
+
+    @Override
+    public boolean isValid() {
+        return nombres != null && apellidos != null && email != null;
+    }
+
     @Override
     public String toString(){
     
